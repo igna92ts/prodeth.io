@@ -1,0 +1,25 @@
+.page-title{
+	margin: 6em 0 3em 0;
+}
+
+.versus{
+	text-align: center;
+	font-weight: bold;
+	padding:25px;
+}
+
+.ongoing-bets .versus{
+	font-size: 25px;	
+}
+
+.closed-bets .versus{
+	font-size: 16px;	
+}
+
+.vertical-center{
+	align-self: center !important;
+}
+
+.payoff{
+	margin-top: 10px !important;
+}

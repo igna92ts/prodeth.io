@@ -1,0 +1,58 @@
+<%- include includes/head.ejs %>
+
+<h2>
+	<div class="ui container center aligned">
+		FAQ
+	</div>
+</h2>
+
+<div class="ui accordion">
+	<div class="title">
+		<i class="dropdown icon"></i>
+		How do I bet?
+	</div>
+	<div class="content">
+		<p class="transition active">
+			To make a bet we recommend <a href="https://metamask.io/">MetaMask</a>, but you can bet just by sending ETH to a generated address we create.
+		</p>
+		<div class="ui red inverted segment">
+			<b>IMPORTANT:</b> Funds sent from exchange's wallets cannot be paid back due to exchange's wallet systems.
+		</div>
+	</div>
+		<div class="title">
+		<i class="dropdown icon"></i>
+		How is the payoff calculated?
+	</div>
+	<div class="content">
+		<p class="transition active">
+			The payoff is calculated by comparing both teams bets. The team with a bigger ETH pool means that it will pay less.
+		</p>
+		<p>
+			<b>Example: Argentina vs. Brazil</b>
+			<br>
+			Argentina's ETH bet pool is 1 ETH and Brazil ETH bet pool is 2 ETH. 
+			<br>
+			This means that there are more ETH on the Brazil pool (a 100% more exactly).
+			<br>
+			Thus, Argentina is willing to pay <b>x2.00</b> and Brazil is willing to pay <b>x1.50</b>.
+		</p>
+
+	</div>
+	<div class="title">
+		<i class="dropdown icon"></i>
+		When do I get paid if I win?
+	</div>
+	<div class="content">
+		You will get paid automatically after the match you betted ends.
+	</div>
+</div>
+
+<script>
+
+$(document).ready(()=>{
+	$('.ui.accordion').accordion();
+})
+
+</script>
+
+<%- include includes/footer.ejs %>
