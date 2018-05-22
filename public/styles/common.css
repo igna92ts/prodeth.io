@@ -16,6 +16,10 @@
 	font-size: 16px;	
 }
 
+.closed-bets .tiny.image{
+	width: 50% !important;
+}
+
 .vertical-center{
 	align-self: center !important;
 }

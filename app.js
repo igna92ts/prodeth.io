@@ -3,7 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+//var web3 = require('web3');
+//var Accounts = require('web3-eth-accounts');
+//var accounts = new Accounts('ws://localhost:8546');
 var homeRouter = require('./routes/home');
 var howItWorksRouter = require('./routes/how-it-works');
 var faqRouter = require('./routes/faq');
