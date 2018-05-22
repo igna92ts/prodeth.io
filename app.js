@@ -3,16 +3,15 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var io = require('socket_api');
+
 //var web3 = require('web3');
 //var Accounts = require('web3-eth-accounts');
 //var accounts = new Accounts('ws://localhost:8546');
-var homeRouter = require('./routes/home');
-var howItWorksRouter = require('./routes/how-it-works');
-var faqRouter = require('./routes/faq');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/index');
 
 var app = express();
-
+app.io = io;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -23,17 +22,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', homeRouter);
-app.use('/users', usersRouter);
-app.use('/how-it-works', howItWorksRouter);
-app.use('/faq', faqRouter);
+app.use('/', indexRouter);
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
-
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
