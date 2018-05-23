@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var io = require('socket_api');
+var io = require('./socket_api');
 
 //var web3 = require('web3');
 //var Accounts = require('web3-eth-accounts');
