@@ -6,10 +6,8 @@ var logger = require('morgan');
 var io = require('./socket_api');
 const mongoose = require('mongoose');
 
-//var web3 = require('web3');
-//var Accounts = require('web3-eth-accounts');
-//var accounts = new Accounts('ws://localhost:8546');
 var indexRouter = require('./routes/index');
+const ethscanService = require('./services/ethscan_service');
 
 var app = express();
 
@@ -29,14 +27,17 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
   console.log('connected to database');
+  
+  //create match method
+  //ethscanService.createMatch();
 });
 
 app.use('/', indexRouter);
-// catch 404 and forward to error handler
+
 app.use((req, res, next) => {
   next(createError(404));
 });
-// error handler
+
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
