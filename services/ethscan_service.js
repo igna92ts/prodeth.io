@@ -54,7 +54,7 @@ const getTransaction = address => {
   });
 };
 
-exports.getTransactions = match => {
+exports.getTransactions = async match => {
   const transactions = await Promise.all([getTransaction(match.team1.account), getTransaction(match.team2.account)]);
   return { team1: transactions[0], team2:transactions[1] };
 };

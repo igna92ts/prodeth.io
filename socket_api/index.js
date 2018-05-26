@@ -18,13 +18,13 @@ io.on('connection', async socket => {
 });
 
 setInterval(() => {
-  const matches = await getMatches();
+  //const matches = await getMatches();
   
   //TODO: trae las transacciones de la API, y guarda solo las nuevas en la base de datos.
   //Tambien si es que hay nuevas, hacer un  io.emit para avisarle a todos los clientes que hay
   //transacciones nuevas.
 
-  await etherscan.getTransactions(matches);
+  //await etherscan.getTransactions(matches);
 },60000)
 
 const getMatches = async () => {

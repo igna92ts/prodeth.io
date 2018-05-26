@@ -4,12 +4,9 @@ const prodeth = {
     matchsRender: (data) => {
         for(let i = 0; i < data.length; i++){
             //check already rendered
-            //THIS DOESNT WORK 
-            if(prodeth.allMatches.indexOf(data[i]) > -1){
+            if(prodeth.allMatches.some(m => m.date === data[i].date && data[i].team1.country.code === m.team1.country.code && data[i].team2.country.code === m.team2.country.code)){
                 continue;
             }
-
-
 
             if(data[i].payed){
                 //finished
