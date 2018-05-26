@@ -4,12 +4,9 @@ const prodeth = {
     matchsRender: (data) => {
         for(let i = 0; i < data.length; i++){
             //check already rendered
-            //THIS DOESNT WORK 
-            if(prodeth.allMatches.indexOf(data[i]) > -1){
+            if(prodeth.allMatches.some(m => m.date === data[i].date && data[i].team1.country.code === m.team1.country.code && data[i].team2.country.code === m.team2.country.code)){
                 continue;
             }
-
-
 
             if(data[i].payed){
                 //finished
@@ -17,18 +14,6 @@ const prodeth = {
                 //closed
             } else {
                 //open
-                
-                //calculate payoff
-                const balanceTeam1 = data[i].team1.balance;
-                const balanceTeam2 = data[i].team2.balance;
-                let payoffTeam1 = 1.00;
-                let payoffTeam2 = 1.00;
-
-                if(balanceTeam1 !== 0 && balanceTeam2 !== 0){
-                    payoffTeam1 = (balanceTeam2 / balanceTeam1 < 1) ? balanceTeam2 / balanceTeam1 + 1 : balanceTeam2 / balanceTeam1
-                    payoffTeam2 = (balanceTeam1 / balanceTeam2 < 1) ? balanceTeam1 / balanceTeam2 + 1 : balanceTeam1 / balanceTeam2
-                }
-
                 $(".open-bets").append(`
                     <div class="row">
                         <div class="four wide column center aligned">
@@ -36,7 +21,7 @@ const prodeth = {
                                 <img src="/images/flags/${data[i].team1.country.flag}.png">
                             </div>
                             <div class='country-code'>${data[i].team1.country.code}</div>
-                            <a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team1.country.name}." data-position="bottom center">x${parseFloat(payoffTeam1).toFixed(2)} ETH</a>
+                            <a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team1.country.name}." data-position="bottom center">x${parseFloat(data[i].team1.payoff).toFixed(2)} ETH</a>
                         </div>
                         <div class="two wide column versus vertical-center">
                             VS
@@ -46,7 +31,7 @@ const prodeth = {
                                 <img src="/images/flags/${data[i].team2.country.flag}.png">
                             </div>
                             <div class='country-code'>${data[i].team2.country.code}</div>
-                            <a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(payoffTeam2).toFixed(2)} ETH</a>
+                            <a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(data[i].team2.payoff).toFixed(2)} ETH</a>
                         </div>
                         <div class="six wide column center aligned vertical-center">
                             <a class="ui black label timeleft" id='timeleft-${prodeth.matchsCounter}' data-inverted="" data-tooltip="Time left before bet closes." data-position="top center"></a>
@@ -107,8 +92,12 @@ const prodeth = {
                         <img src="/images/flags/${data.team1.country.flag}.png">
                     </div>
                     <div class='country-code'>${data.team1.country.name}</div>
-                    <a class="ui green label big payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team1.country.name}." data-position="bottom center">x4.44 ETH</a>
+                    <a class="ui green label big payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team1.country.name}." data-position="bottom center">x${parseFloat(data.team1.payoff).toFixed(2)} ETH</a>
                     <a class="ui black label big" id="bet-team1">Bet on this team</a>
+                    <div class="ui blue label large basic" style="margin-top:10px">
+                        Pool 
+                        <div class="detail">${data.team1.balance} ETH</div>
+                    </div>
                 </div>
                 <div class="two wide column versus vertical-center">
                     VS
@@ -118,13 +107,17 @@ const prodeth = {
                         <img src="/images/flags/${data.team2.country.flag}.png">
                     </div>
                     <div class='country-code'>${data.team2.country.name}</div>
-                    <a class="ui green label big payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team2.country.name}." data-position="bottom center">x5.55 ETH</a>
+                    <a class="ui green label big payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team2.country.name}." data-position="bottom center">x${parseFloat(data.team2.payoff).toFixed(2)} ETH</a>
                     <a class="ui black label big" id="bet-team2">Bet on this team</a>
+                    <div class="ui blue label large basic" style="margin-top:10px">
+                        Pool 
+                        <div class="detail">${data.team1.balance} ETH</div>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="eight wide column center aligned">
-                    <table class="ui collapsing celled small table">
+                    <table class="ui collapsing celled small table" style="width: 100%;">
                         <thead>
                             <tr>
                                 <th colspan="2" style="text-align: center;">Last Transactions</th>
@@ -135,19 +128,26 @@ const prodeth = {
                             </tr>
                         </thead>
                         <tbody>
+                            ${data.team1.transactions.length <= 0 ? 
+                            `
                             <tr>
-                                <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/0x68a19d11ad0211c3e9d361d901aaa96313965a8c5c63356d761ff9e9a0352420"><i class="icon external alternate"></i></a> 0x73667e5b76403b07732c62622dc5a3bca091808d</td>
-                                <td class="collapsing">5.23 ETH</td>
+                                <td colspan="2" style="text-align:center;">There are no transactions yet.</td>
                             </tr>
-                            <tr>
-                                <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/0x68a19d11ad0211c3e9d361d901aaa96313965a8c5c63356d761ff9e9a0352420"><i class="icon external alternate"></i></a> 0x73667e5b76403b07732c62622dc5a3bca091808d</td>
-                                <td class="collapsing">1.52 ETH</td>
-                            </tr>
+                            ` 
+                            : data.team1.transactions.reduce((result, t) => {
+                                return 
+                                `${result}<tr>
+                                    <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/${t.id}"><i class="icon external alternate"></i></a> ${t.sender}</td>
+                                    <td class="collapsing">${t.amount} ETH</td>
+                                </tr>`
+                            }, "")
+                             
+                            }
                         </tbody>
                     </table>
                 </div>
                 <div class="eight wide column center aligned">
-                    <table class="ui collapsing celled small table">
+                    <table class="ui collapsing celled small table" style="width: 100%;">
                         <thead>
                             <tr>
                                 <th colspan="2" style="text-align: center;">Last Transactions</th>
@@ -158,14 +158,21 @@ const prodeth = {
                             </tr>
                         </thead>
                         <tbody>
+                            ${data.team2.transactions.length <= 0 ? 
+                            `
                             <tr>
-                                <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/0x68a19d11ad0211c3e9d361d901aaa96313965a8c5c63356d761ff9e9a0352420"><i class="icon external alternate"></i></a> 0x73667e5b76403b07732c62622dc5a3bca091808d</td>
-                                <td class="collapsing">5.23 ETH</td>
+                                <td colspan="2" style="text-align:center;">There are no transactions yet.</td>
                             </tr>
-                            <tr>
-                                <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/0x68a19d11ad0211c3e9d361d901aaa96313965a8c5c63356d761ff9e9a0352420"><i class="icon external alternate"></i></a> 0x73667e5b76403b07732c62622dc5a3bca091808d</td>
-                                <td class="collapsing">1.52 ETH</td>
-                            </tr>
+                            ` 
+                            : data.team2.transactions.reduce((result, t) => {
+                                return 
+                                `${result}<tr>
+                                    <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/${t.id}"><i class="icon external alternate"></i></a> ${t.sender}</td>
+                                    <td class="collapsing">${t.amount} ETH</td>
+                                </tr>`
+                            }, "")
+                             
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -193,8 +200,8 @@ const prodeth = {
                 `
                 <h3>How much would you like to bet on this team?</h3>
                 <div class="ui right big labeled input">
-                    <input type="number" placeholder="Amount" id="amount" min=0.001>
                     <label for="amount" class="ui label">ETH</label>
+                    <input type="number" placeholder="Amount" id="amount" min=0.001>
                 </div>
                 `
                 :
@@ -217,11 +224,15 @@ const prodeth = {
         `)
         
         if(typeof web3 !== "undefined"){
+            $(".modal#bet .actions #close").hide();
             $("#confirm-bet").unbind().click(()=>{
                 web3.eth.sendTransaction({from: web3.eth.accounts[0], to: goal.address, gas:250000, value: web3.toWei($("#amount").val(),"ether") },function(){
 
                 })
             })
+        } else {
+            $(".modal#bet .actions #close").show();
+            $(".modal#bet .actions .button").not("#close").hide();
         }
     }
 }

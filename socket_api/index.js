@@ -5,11 +5,23 @@ const etherscan = require('../services/ethscan_service');
 
 io.on('connection', async socket => {
 
-  const rawMatches = await getMatches(); 
+  const rawMatches = await getMatches();
+  //calculate balance and payoff
   const matches = rawMatches.map(m => {
     m = m.toJSON();
+    //balance
     m.team1.balance = m.team1.transactions.reduce((total, t) => total + t.amount, 0);
     m.team2.balance = m.team2.transactions.reduce((total, t) => total + t.amount, 0);
+
+    //payoff
+    m.team1.payoff = 1.00;
+    m.team2.payoff = 1.00;
+
+    if(m.team1.balance !== 0 && m.team2.balance !== 0){
+      m.team1.payoff = (m.team2.balance / m.team1.balance < 1) ? m.team2.balance / m.team1.balance + 1 : m.team2.balance / m.team1.balance;
+      m.team2.payoff = (m.team1.balance / m.team2.balance < 1) ? m.team1.balance / m.team2.balance + 1 : m.team1.balance / m.team2.balance;
+    }
+
     return m;
   });
 
