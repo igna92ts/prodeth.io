@@ -2,7 +2,6 @@ const request = require('request');
 const Match = require('../models/match');
 const Web3 = require('web3');
 const web3 = new Web3();
-//const moment = require('moment');
 const moment = require('moment-timezone');
 
 const apiKey = 'RQBPFA2V6GCPXV3RBX3R6AXKF3X78UYKP9';
@@ -15,7 +14,6 @@ exports.createMatch = () => {
 	const account1 = web3.eth.accounts.create();
 	const account2 = web3.eth.accounts.create();
 
-  
 	const match = new Match({
 	  team1: {
 		  address: account1.address,
@@ -56,7 +54,8 @@ const getTransaction = address => {
   });
 };
 
-exports.getTransactions = accounts => {
-  return Promise.all(accounts.map(a => getTransaction(a.address)));
+exports.getTransactions = match => {
+  const transactions = await Promise.all([getTransaction(match.team1.account), getTransaction(match.team2.account)]);
+  return { team1: transactions[0], team2:transactions[1] };
 };
 
