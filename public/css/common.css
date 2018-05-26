@@ -1,3 +1,14 @@
+@font-face {
+    font-family: Dusha;
+    src: url("../fonts/Dusha.ttf");
+}
+
+.country-code{
+	font-family: Dusha;
+	font-size: 28px;
+	padding: 10px;
+}
+
 .page-title{
 	margin: 6em 0 3em 0;
 }
@@ -26,4 +37,9 @@
 
 .payoff{
 	margin-top: 10px !important;
+}
+
+.step, .step .description, .step:after{
+	background-color: #21ba45 !important;
+	color: white !important;
 }

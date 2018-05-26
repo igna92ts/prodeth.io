@@ -8,77 +8,14 @@
 		<div class="three column row">
 			<div class="eight wide column">
 				<div class="ui top attached header inverted">
-					<h3>Ongoing bets</h3>
+					<h3>Open bets</h3>
 				</div>
 				<div class="ui segment attached">
-					<div class="ui vertically divided grid ongoing-bets">
-						<div class="row">
-							<div class="four wide column center aligned">
-								<div class="ui tiny image" data-tooltip="Argentina">
-									<img src="/images/flags/argentina.png">
-								</div>
-								<a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x1.42 ETH</a>
-							</div>
-							<div class="two wide column versus vertical-center">
-								VS
-							</div>
-							<div class="four wide column center aligned">
-								<div class="ui tiny image" data-tooltip="Brazil">
-									<img src="/images/flags/brazil.png">
-								</div>
-								<a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x2.58 ETH</a>
-							</div>
-							<div class="six wide column center aligned vertical-center">
-								<div class="ui primary button">
-									Bet now
-									<i class="right chevron icon"></i>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="four wide column center aligned">
-								<div class="ui tiny image" data-tooltip="Russia">
-									<img src="/images/flags/russia.png">
-								</div>
-								<a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x1.11 ETH</a>
-							</div>
-							<div class="two wide column versus vertical-center">
-								VS
-							</div>
-							<div class="four wide column center aligned">
-								<div class="ui tiny image" data-tooltip="Nigeria">
-									<img src="/images/flags/nigeria.png">
-								</div>
-								<a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x13.21 ETH</a>
-							</div>
-							<div class="six wide column center aligned vertical-center">
-								<div class="ui primary button">
-									Bet now
-									<i class="right chevron icon"></i>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="four wide column center aligned">
-								<div class="ui tiny image" data-tooltip="Germany">
-									<img src="/images/flags/germany.png">
-								</div>
-								<a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x1.42 ETH</a>
-							</div>
-							<div class="two wide column versus vertical-center">
-								VS
-							</div>
-							<div class="four wide column center aligned">
-								<div class="ui tiny image" data-tooltip="Colombia">
-									<img src="/images/flags/colombia.png">
-								</div>
-								<a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x2.58 ETH</a>
-							</div>
-							<div class="six wide column center aligned vertical-center">
-								<div class="ui primary button">
-									Bet now
-									<i class="right chevron icon"></i>
-								</div>
+					<div class="ui vertically divided grid open-bets">
+						<div class="row loading">
+							<div class="sixteen wide column center aligned">
+									<div class="ui active centered inline loader"></div>
+									<p>Loading...</p>
 							</div>
 						</div>
 					</div>
@@ -127,8 +64,8 @@
 	</div>
 </div>
 
-<div class="ui modal">
-	<div class="header">Header</div>
+<div class="ui modal" id="match-details">
+	<div class="header">Match details</div>
 		<div class="content">
 		<p></p>
 		<p></p>

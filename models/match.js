@@ -13,8 +13,8 @@ const account =   {
   }],
   country: {
     name: { type: String, required: true },
-	code: { type: String, required: true },
-	flag: { type: String, required: true }
+	  code: { type: String, required: true },
+	  flag: { type: String, required: true }
   }
 }
 
@@ -22,7 +22,7 @@ const matchSquema = mongoose.Schema({
   team1: account,
   team2: account,
   date: { type: Date, required: true },
-  ended: { type: Boolean, required: true },  
+  payed: { type: Boolean, required: true },  
 });
 
 module.exports = mongoose.model('Match', matchSquema);

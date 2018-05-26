@@ -2,40 +2,43 @@ const request = require('request');
 const Match = require('../models/match');
 const Web3 = require('web3');
 const web3 = new Web3();
+//const moment = require('moment');
+const moment = require('moment-timezone');
 
 const apiKey = 'RQBPFA2V6GCPXV3RBX3R6AXKF3X78UYKP9';
 const apiHost = 'http://api.etherscan.io';
 const apiUrls = {
-	  transactions: `${apiHost}/api?module=account&action=txlist&apikey=${apiKey}&sort=desc&address=`
+  transactions: `${apiHost}/api?module=account&action=txlist&apikey=${apiKey}&sort=desc&address=`
 };
 
 exports.createMatch = () => {
 	const account1 = web3.eth.accounts.create();
 	const account2 = web3.eth.accounts.create();
-	
+
+  
 	const match = new Match({
 	  team1: {
-		address: account1.address,
-        privateKey: account1.privateKey,
-        transactions: [],
-        country: {
-          name: "Russia",
+		  address: account1.address,
+      privateKey: account1.privateKey,
+      transactions: [],
+      country: {
+        name: "Russia",
 	      code: "RUS",
-          flag: "russia"
-		}
+        flag: "russia"
+		  }
 	  },
-      team2: {
-		address: account2.address,
-        privateKey: account2.privateKey,
-        transactions: [],
-        country: {
-          name: "Saudi Arabia",
+    team2: {
+		  address: account2.address,
+      privateKey: account2.privateKey,
+      transactions: [],
+      country: {
+        name: "Saudi Arabia",
 	      code: "KSA",
-          flag: "saudi-arabia"
+        flag: "saudi-arabia"
 	    }
 	  },
-      date: new Date("2018-10-20T15:00:00Z"),
-      ended: false	
+    date: moment.tz("2018-06-14 18:00", "Europe/Moscow").valueOf(),
+    payed: false
 	});
 	
 	match.save();
