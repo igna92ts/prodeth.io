@@ -66,11 +66,26 @@
 
 <div class="ui modal" id="match-details">
 	<div class="header">Match details</div>
-		<div class="content">
-		<p></p>
-		<p></p>
-		<p></p>
+	<div class="content"></div>
+</div>
+
+<div class="ui tiny modal" id="bet" style="text-align:center;">
+	<div class="header">Bet</div>
+	<div class="content"></div>
+	<div class="actions">
+		<div class="ui negative button">
+			Cancel
+		</div>
+		<div class="ui positive right labeled icon button" id="confirm-bet">
+			Confirm bet
+			<i class="checkmark icon"></i>
+		</div>
 	</div>
 </div>
 
+<div class="ui mini modal" id="error">
+	<div class="header">Oops!</div>
+	<div class="content"></div>
+</div>
+	
 <%- include includes/footer.ejs %>

@@ -8,9 +8,24 @@ $(document).ready(()=>{
 				balance = web3.fromWei(r);
 				$("#balance").html(`Current balance: <b>${balance} ETH</b>`);
 			})
+		} else {
+			$("#balance").text(`It seems that you have MetaMask installed but you didn't created an account.`);
 		}
 	} else {
 		//metamask not installed
 		$("#balance").html(`We recommend you to use  <a href="https://metamask.io/">MetaMask</a>`)
 	}
+
+	var clipboard = new ClipboardJS('.copy-button');
+
+	clipboard.on('success', function(e) {
+		$(e.trigger).attr("data-inverted","").attr("data-tooltip","Copied!").attr("data-position","right center");
+
+		e.clearSelection();
+	});
 })
+
+const showError = message => {
+	$(".modal#error").modal("show");
+	$(".modal#error .content").text(message);
+}

@@ -9,6 +9,10 @@
 	padding: 10px;
 }
 
+.timeleft{
+	margin-bottom:10px !important;
+}
+
 .page-title{
 	margin: 6em 0 3em 0;
 }
