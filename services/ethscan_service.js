@@ -16,7 +16,7 @@ exports.createMatch = () => {
 
 	const match = new Match({
 	  team1: {
-		  address: account1.address,
+		  address: '0x28b608cbe827258d07bf85dd8fe2d48c1a5cb9cc',
       privateKey: account1.privateKey,
       transactions: [],
       country: {
@@ -26,7 +26,7 @@ exports.createMatch = () => {
 		  }
 	  },
     team2: {
-		  address: account2.address,
+		  address: '0x28b608cbe827258d07bf85dd8fe2d48c1a5cb9cc',
       privateKey: account2.privateKey,
       transactions: [],
       country: {
@@ -38,24 +38,34 @@ exports.createMatch = () => {
     date: moment.tz("2018-06-14 18:00", "Europe/Moscow").valueOf(),
     payed: false
 	});
-	
 	match.save();
-}
+};
 
-const getTransaction = address => { 
+const getTransaction = address => {
   return new Promise((resolve, reject) => {
     request.get({
       url: `${apiUrls.transactions}${address}`,
       json: true
     }, (err, res, body) => {
       if (err) return reject(err);
-      return resolve(body);
+      const results = body.result.filter(t => t.from !== address && parseInt(t.isError) === 0);
+      return resolve(results.map(r => {
+        return {
+          id: r.hash,
+          amount: web3.utils.fromWei(r.value, 'ether'),
+          sender: r.from,
+          time: new Date(r.timeStamp * 1000)
+        };
+      }));
     });
   });
 };
 
-exports.getTransactions = match => {
-  const transactions = await Promise.all([getTransaction(match.team1.account), getTransaction(match.team2.account)]);
-  return { team1: transactions[0], team2:transactions[1] };
+exports.getTransactions = async match => {
+  const transactions = await Promise.all([getTransaction(match.team1.address), getTransaction(match.team2.address)]);
+  return {
+    team1: transactions[0],
+    team2: transactions[1]
+  };
 };
 

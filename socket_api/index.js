@@ -5,8 +5,7 @@ const etherscan = require('../services/ethscan_service');
 
 io.on('connection', async socket => {
 
-  const rawMatches = await getMatches();
-  
+  const rawMatches = await getMatches(); 
   const matches = rawMatches.map(m => {
     m = m.toJSON();
     m.team1.balance = m.team1.transactions.reduce((total, t) => total + t.amount, 0);
@@ -17,20 +16,29 @@ io.on('connection', async socket => {
   socket.emit('all-matches', matches);
 });
 
-setInterval(() => {
-  const matches = await getMatches();
-  
-  //TODO: trae las transacciones de la API, y guarda solo las nuevas en la base de datos.
-  //Tambien si es que hay nuevas, hacer un  io.emit para avisarle a todos los clientes que hay
-  //transacciones nuevas.
+setInterval(async () => {
+  const rawMatches = await getMatches();
 
-  await etherscan.getTransactions(matches);
-},60000)
+  const matches = await Promise.all(rawMatches.map(async m => {
+    const transactions = await etherscan.getTransactions(m);
+    m.team1.transactions = mergeTransactions(m.team1.toJSON().transactions, transactions.team1);
+    m.team2.transactions = mergeTransactions(m.team2.toJSON().transactions, transactions.team2);
+    return m;
+  }));
+  await matches.map(async m => await m.save());
+  io.emit('all-matches', matches);
+}, 60000);
+
+const mergeTransactions = (oldTransactions, newTransactions) => {
+  return oldTransactions.concat(
+    newTransactions.filter(i => oldTransactions.indexOf(i) == -1)
+  );
+};
 
 const getMatches = async () => {
   return await Match
   .find({}, { 'team1.privateKey': 0, 'team2.privateKey': 0 });
-}
+};
 
 // io.emit('evento', 'esto emite a todo el mundo')
 
