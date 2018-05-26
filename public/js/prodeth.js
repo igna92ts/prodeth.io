@@ -117,7 +117,7 @@ const prodeth = {
             </div>
             <div class="row">
                 <div class="eight wide column center aligned">
-                    <table class="ui collapsing celled small table">
+                    <table class="ui collapsing celled small table" style="width: 100%;">
                         <thead>
                             <tr>
                                 <th colspan="2" style="text-align: center;">Last Transactions</th>
@@ -128,19 +128,26 @@ const prodeth = {
                             </tr>
                         </thead>
                         <tbody>
+                            ${data.team1.transactions.length <= 0 ? 
+                            `
                             <tr>
-                                <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/0x68a19d11ad0211c3e9d361d901aaa96313965a8c5c63356d761ff9e9a0352420"><i class="icon external alternate"></i></a> 0x73667e5b76403b07732c62622dc5a3bca091808d</td>
-                                <td class="collapsing">5.23 ETH</td>
+                                <td colspan="2" style="text-align:center;">There are no transactions yet.</td>
                             </tr>
-                            <tr>
-                                <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/0x68a19d11ad0211c3e9d361d901aaa96313965a8c5c63356d761ff9e9a0352420"><i class="icon external alternate"></i></a> 0x73667e5b76403b07732c62622dc5a3bca091808d</td>
-                                <td class="collapsing">1.52 ETH</td>
-                            </tr>
+                            ` 
+                            : data.team1.transactions.reduce((result, t) => {
+                                return 
+                                `${result}<tr>
+                                    <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/${t.id}"><i class="icon external alternate"></i></a> ${t.sender}</td>
+                                    <td class="collapsing">${t.amount} ETH</td>
+                                </tr>`
+                            }, "")
+                             
+                            }
                         </tbody>
                     </table>
                 </div>
                 <div class="eight wide column center aligned">
-                    <table class="ui collapsing celled small table">
+                    <table class="ui collapsing celled small table" style="width: 100%;">
                         <thead>
                             <tr>
                                 <th colspan="2" style="text-align: center;">Last Transactions</th>
@@ -151,14 +158,21 @@ const prodeth = {
                             </tr>
                         </thead>
                         <tbody>
+                            ${data.team2.transactions.length <= 0 ? 
+                            `
                             <tr>
-                                <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/0x68a19d11ad0211c3e9d361d901aaa96313965a8c5c63356d761ff9e9a0352420"><i class="icon external alternate"></i></a> 0x73667e5b76403b07732c62622dc5a3bca091808d</td>
-                                <td class="collapsing">5.23 ETH</td>
+                                <td colspan="2" style="text-align:center;">There are no transactions yet.</td>
                             </tr>
-                            <tr>
-                                <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/0x68a19d11ad0211c3e9d361d901aaa96313965a8c5c63356d761ff9e9a0352420"><i class="icon external alternate"></i></a> 0x73667e5b76403b07732c62622dc5a3bca091808d</td>
-                                <td class="collapsing">1.52 ETH</td>
-                            </tr>
+                            ` 
+                            : data.team2.transactions.reduce((result, t) => {
+                                return 
+                                `${result}<tr>
+                                    <td><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/${t.id}"><i class="icon external alternate"></i></a> ${t.sender}</td>
+                                    <td class="collapsing">${t.amount} ETH</td>
+                                </tr>`
+                            }, "")
+                             
+                            }
                         </tbody>
                     </table>
                 </div>

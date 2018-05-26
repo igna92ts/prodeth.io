@@ -7,9 +7,7 @@ const account =   {
     id: { type: String, required: true },
     amount: { type: Number, required: true },
     sender: { type: String, required: true },
-    receiver: { type: String, required: true },
-    time: { type: Date, required: true  },
-    isError: { type: Number, required: true  }
+    time: { type: Date, required: true  }
   }],
   country: {
     name: { type: String, required: true },
