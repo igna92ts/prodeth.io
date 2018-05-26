@@ -14,18 +14,6 @@ const prodeth = {
                 //closed
             } else {
                 //open
-                
-                //calculate payoff
-                const balanceTeam1 = data[i].team1.balance;
-                const balanceTeam2 = data[i].team2.balance;
-                let payoffTeam1 = 1.00;
-                let payoffTeam2 = 1.00;
-
-                if(balanceTeam1 !== 0 && balanceTeam2 !== 0){
-                    payoffTeam1 = (balanceTeam2 / balanceTeam1 < 1) ? balanceTeam2 / balanceTeam1 + 1 : balanceTeam2 / balanceTeam1
-                    payoffTeam2 = (balanceTeam1 / balanceTeam2 < 1) ? balanceTeam1 / balanceTeam2 + 1 : balanceTeam1 / balanceTeam2
-                }
-
                 $(".open-bets").append(`
                     <div class="row">
                         <div class="four wide column center aligned">
@@ -33,7 +21,7 @@ const prodeth = {
                                 <img src="/images/flags/${data[i].team1.country.flag}.png">
                             </div>
                             <div class='country-code'>${data[i].team1.country.code}</div>
-                            <a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team1.country.name}." data-position="bottom center">x${parseFloat(payoffTeam1).toFixed(2)} ETH</a>
+                            <a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team1.country.name}." data-position="bottom center">x${parseFloat(data[i].team1.payoff).toFixed(2)} ETH</a>
                         </div>
                         <div class="two wide column versus vertical-center">
                             VS
@@ -43,7 +31,7 @@ const prodeth = {
                                 <img src="/images/flags/${data[i].team2.country.flag}.png">
                             </div>
                             <div class='country-code'>${data[i].team2.country.code}</div>
-                            <a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(payoffTeam2).toFixed(2)} ETH</a>
+                            <a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(data[i].team2.payoff).toFixed(2)} ETH</a>
                         </div>
                         <div class="six wide column center aligned vertical-center">
                             <a class="ui black label timeleft" id='timeleft-${prodeth.matchsCounter}' data-inverted="" data-tooltip="Time left before bet closes." data-position="top center"></a>
@@ -104,8 +92,12 @@ const prodeth = {
                         <img src="/images/flags/${data.team1.country.flag}.png">
                     </div>
                     <div class='country-code'>${data.team1.country.name}</div>
-                    <a class="ui green label big payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team1.country.name}." data-position="bottom center">x4.44 ETH</a>
+                    <a class="ui green label big payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team1.country.name}." data-position="bottom center">x${parseFloat(data.team1.payoff).toFixed(2)} ETH</a>
                     <a class="ui black label big" id="bet-team1">Bet on this team</a>
+                    <div class="ui blue label large basic" style="margin-top:10px">
+                        Pool 
+                        <div class="detail">${data.team1.balance} ETH</div>
+                    </div>
                 </div>
                 <div class="two wide column versus vertical-center">
                     VS
@@ -115,8 +107,12 @@ const prodeth = {
                         <img src="/images/flags/${data.team2.country.flag}.png">
                     </div>
                     <div class='country-code'>${data.team2.country.name}</div>
-                    <a class="ui green label big payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team2.country.name}." data-position="bottom center">x5.55 ETH</a>
+                    <a class="ui green label big payoff" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team2.country.name}." data-position="bottom center">x${parseFloat(data.team2.payoff).toFixed(2)} ETH</a>
                     <a class="ui black label big" id="bet-team2">Bet on this team</a>
+                    <div class="ui blue label large basic" style="margin-top:10px">
+                        Pool 
+                        <div class="detail">${data.team1.balance} ETH</div>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -190,8 +186,8 @@ const prodeth = {
                 `
                 <h3>How much would you like to bet on this team?</h3>
                 <div class="ui right big labeled input">
-                    <input type="number" placeholder="Amount" id="amount" min=0.001>
                     <label for="amount" class="ui label">ETH</label>
+                    <input type="number" placeholder="Amount" id="amount" min=0.001>
                 </div>
                 `
                 :
@@ -214,11 +210,15 @@ const prodeth = {
         `)
         
         if(typeof web3 !== "undefined"){
+            $(".modal#bet .actions #close").hide();
             $("#confirm-bet").unbind().click(()=>{
                 web3.eth.sendTransaction({from: web3.eth.accounts[0], to: goal.address, gas:250000, value: web3.toWei($("#amount").val(),"ether") },function(){
 
                 })
             })
+        } else {
+            $(".modal#bet .actions #close").show();
+            $(".modal#bet .actions .button").not("#close").hide();
         }
     }
 }
