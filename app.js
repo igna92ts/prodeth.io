@@ -1,15 +1,14 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var io = require('./socket_api');
-const mongoose = require('mongoose');
+const createError = require('http-errors'),
+  express = require('express'),
+  path = require('path'),
+  cookieParser = require('cookie-parser'),
+  logger = require('morgan'),
+  io = require('./socket_api'),
+  mongoose = require('mongoose'),
+  indexRouter = require('./routes/index'),
+  ethscanService = require('./services/ethscan_service');
 
-var indexRouter = require('./routes/index');
-const ethscanService = require('./services/ethscan_service');
-
-var app = express();
+const app = express();
 
 app.io = io;
 // view engine setup
@@ -28,8 +27,8 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
   console.log('connected to database');
 
-  //create match method
-  //ethscanService.createMatch();
+  // create match method
+  ethscanService.createMatch();
 });
 
 app.use('/', indexRouter);

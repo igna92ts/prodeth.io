@@ -3,21 +3,24 @@ const http = require('http');
 const Match = require('../models/match');
 const etherscan = require('../services/ethscan_service');
 
-io.on('connection', async socket => {
+const getMatches = async () => {
+  return Match.find({}, { 'team1.privateKey': 0, 'team2.privateKey': 0 });
+};
 
+io.on('connection', async socket => {
   const rawMatches = await getMatches();
-  //calculate balance and payoff
+  //  calculate balance and payoff
   const matches = rawMatches.map(m => {
     m = m.toJSON();
-    //balance
+    //  balance
     m.team1.balance = m.team1.transactions.reduce((total, t) => total + t.amount, 0);
     m.team2.balance = m.team2.transactions.reduce((total, t) => total + t.amount, 0);
 
-    //payoff
+    //  payoff
     m.team1.payoff = 1.00;
     m.team2.payoff = 1.00;
 
-    if(m.team1.balance !== 0 && m.team2.balance !== 0){
+    if (m.team1.balance !== 0 && m.team2.balance !== 0) {
       m.team1.payoff = (m.team2.balance / m.team1.balance < 1) ? m.team2.balance / m.team1.balance + 1 : m.team2.balance / m.team1.balance;
       m.team2.payoff = (m.team1.balance / m.team2.balance < 1) ? m.team1.balance / m.team2.balance + 1 : m.team1.balance / m.team2.balance;
     }
@@ -30,27 +33,24 @@ io.on('connection', async socket => {
 
 setInterval(async () => {
   const rawMatches = await getMatches();
-
-  const matches = await Promise.all(rawMatches.map(async m => {
-    const transactions = await etherscan.getTransactions(m);
-    m.team1.transactions = mergeTransactions(m.team1.toJSON().transactions, transactions.team1);
-    m.team2.transactions = mergeTransactions(m.team2.toJSON().transactions, transactions.team2);
-    return m;
-  }));
-  await matches.map(async m => await m.save());
-  io.emit('all-matches', matches);
-}, 60000);
-
-const mergeTransactions = (oldTransactions, newTransactions) => {
-  return oldTransactions.concat(
-    newTransactions.filter(i => oldTransactions.indexOf(i) == -1)
+  let emit = false;
+  const matches = await Promise.all(
+    rawMatches.map(async m => {
+      const transactions = await etherscan.getTransactions(m);
+      if (
+        transactions.team1.length > m.team1.transactions.length ||
+        transactions.team2.length > m.team2.transactions.length
+      ) {
+        m.team1.transactions = transactions.team1;
+        m.team2.transactions = transactions.team2;
+        emit = true;
+      }
+      return m.save();
+    })
   );
-};
-
-const getMatches = async () => {
-  return await Match
-  .find({}, { 'team1.privateKey': 0, 'team2.privateKey': 0 });
-};
+  await matches.map(async m => m.save());
+  if (emit) io.emit('all-matches', matches);
+}, 60000);
 
 // io.emit('evento', 'esto emite a todo el mundo')
 
