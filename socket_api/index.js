@@ -1,7 +1,7 @@
-const io = require('socket.io')();
-const http = require('http');
-const Match = require('../models/match');
-const etherscan = require('../services/ethscan_service');
+const io = require('socket.io')(),
+  http = require('http'),
+  Match = require('../models/match'),
+  etherscan = require('../services/ethscan_service');
 
 const getMatches = async () => {
   return Match.find({}, { 'team1.privateKey': 0, 'team2.privateKey': 0 });
