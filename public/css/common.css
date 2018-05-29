@@ -3,6 +3,19 @@
     src: url("../fonts/Dusha.ttf");
 }
 
+.ui.footer.segment {
+    padding: 5em 0em;
+}
+
+body{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+.main-content {
+    flex: 1;
+}
+
 .country-code{
 	font-family: Dusha;
 	font-size: 28px;

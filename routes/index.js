@@ -3,15 +3,24 @@ const express = require('express'),
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('home');
+  res.render('home', {
+    title: "World Cup Ethereum Betting",
+    breadcrumb: ""
+  });
 });
 
 router.get('/faq', (req, res, next) => {
-  res.render('faq');
+  res.render('faq', {
+    title: "FAQ",
+    breadcrumb: "FAQ"
+  });
 });
 
 router.get('/how-it-works', (req, res, next) => {
-  res.render('how_it_works');
+  res.render('how_it_works', {
+    title: "How it works",
+    breadcrumb: "How it works"
+  });
 });
 
 module.exports = router;
