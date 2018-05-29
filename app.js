@@ -28,7 +28,7 @@ db.once('open', () => {
   console.log('connected to database');
 
   // create match method
-  ethscanService.createMatch();
+  //ethscanService.createMatch();
 });
 
 app.use('/', indexRouter);

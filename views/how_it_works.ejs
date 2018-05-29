@@ -6,6 +6,25 @@
      text-align: left;
  }
 
+.description{
+	font-size:18px;
+}
+
+.step:nth-child(1),.step:nth-child(1) .description,.step:nth-child(1):after{
+	background: #00b5ad !important;
+    color: white !important;
+}
+
+.step:nth-child(2),.step:nth-child(2) .description,.step:nth-child(2):after{
+	background: #2185d0 !important;
+    color: white !important;
+}
+
+.step:nth-child(3),.step:nth-child(3) .description{
+	background: #6435c9 !important;
+    color: white !important;
+}
+
 </style>
 
 <h1>
@@ -15,29 +34,64 @@
 </h1>
 
 <div class="ui container center aligned">
-<div class="ui steps left aligned">
-	<div class="step">
-		<i class="flag icon"></i>
-		<div class="content">
-			<div class="title">Select Team</div>
-			<div class="description">Select the Team you think is going to win</div>
+	<div class="ui steps top attached left aligned" style="margin:0px 0 20px 0px">
+		<div class="step">
+			<i class="flag icon"></i>
+			<div class="content">
+				<div class="title">Select Team</div>
+				<div class="description">Who is going to win?</div>
+			</div>
+		</div>
+		<div class="step">
+			<i class="exchange icon"></i>
+			<div class="content">
+				<div class="title">Pay</div>
+				<div class="description">Send ETH to the given address.</div>
+			</div>
+		</div>
+		<div class="step">
+			<i class="clock icon"></i>
+			<div class="content">
+				<div class="title">Done</div>
+				<div class="description">Wait for the match results.</div>
+			</div>
 		</div>
 	</div>
-	<div class="step">
-		<i class="exchange icon"></i>
-		<div class="content">
-			<div class="title">Pay</div>
-			<div class="description">Send ETH to the given address</div>
+	<h1>
+		<div class="ui container center aligned">
+			Blockchain benefits
+		</div>
+	</h1>
+	<div class="ui grid stackable">
+		<div class="three column row">
+			<div class="column">
+				<div class="ui segment teal">
+					<div class="ui image small">
+						<img src="/images/history.svg">
+					</div>
+					<h2>No registration needed</h2>
+					<p class="description"><b>You don't need to register.</b> You can bet instantly bet by sending Ethereum to the match's team address.</p>
+				</div>
+			</div>
+			<div class="column">
+				<div class="ui segment blue">
+					<div class="ui image small">
+						<img src="/images/blockchain.svg">
+					</div>
+					<h2>Transparency</h2>
+					<p class="description"><b>You can track</b> every match's team Ethereum address, meaning that you can see how much is the ETH pool of every single address and how it's payed to the winner by reading the blockchain.</p>
+				</div>
+			</div>
+			<div class="column">
+				<div class="ui segment violet">
+					<div class="ui image small">
+						<img src="/images/ethereum.svg">
+					</div>
+					<h2>Ethereum Network</h2>
+					<p class="description">The <b>Ethereum Network</b> is one of the most popular blockchain networks that lets you perform quick transactions with low fees.</p>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="step">
-		<i class="clock icon"></i>
-		<div class="content">
-			<div class="title">Done</div>
-			<div class="description">Wait for the match results</div>
-		</div>
-	</div>
-</div>
-<p>You will be automatically paid back to the Ethereum Address once the match you are betting ends.</p>
 </div>
 <%- include includes/footer.ejs %>

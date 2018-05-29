@@ -7,7 +7,7 @@ const request = require('request'),
 const apiKey = 'RQBPFA2V6GCPXV3RBX3R6AXKF3X78UYKP9';
 const apiHost = 'http://api.etherscan.io';
 const apiUrls = {
-  transactions: `${apiHost}/api?module=account&action=txlist&apikey=${apiKey}&sort=desc&address=`
+  transactions: `${apiHost}/api?module=account&action=txlist&startblock=5694716&apikey=${apiKey}&sort=desc&address=`
 };
 
 exports.createMatch = () => {
@@ -16,7 +16,7 @@ exports.createMatch = () => {
 
   const match = new Match({
     team1: {
-      address: '0x28b608cbe827258d07bf85dd8fe2d48c1a5cb9cc',
+      address: account1.address,
       privateKey: account1.privateKey,
       transactions: [],
       country: {
@@ -26,7 +26,7 @@ exports.createMatch = () => {
       }
     },
     team2: {
-      address: '0x28b608cbe827258d07bf85dd8fe2d48c1a5cb9cc',
+      address: account2.address,
       privateKey: account2.privateKey,
       transactions: [],
       country: {
