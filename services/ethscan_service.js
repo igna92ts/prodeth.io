@@ -50,6 +50,7 @@ const getTransaction = address => {
       },
       (err, res, body) => {
         if (err) return reject(err);
+        else if (!body.result) return reject(body);
         const results = body.result.filter(t => t.from !== address && parseInt(t.isError) === 0);
         return resolve(
           results.map(r => {

@@ -13,24 +13,26 @@ io.on('connection', async socket => {
   socket.emit('all-matches', matchesCalculations(matches));
 });
 
+const delay = () => new Promise((resolve, reject) => setTimeout(resolve, 250));
+
 setInterval(async () => {
   const rawMatches = await getMatches();
   let emit = false;
-  const matches = await Promise.all(
-    rawMatches.map(async m => {
-      const transactions = await etherscan.getTransactions(m);
-      if (
-        transactions.team1.length > m.team1.transactions.length ||
+  const matches = await rawMatches.reduce(async (p, m) => {
+    const transactions = await etherscan.getTransactions(m);
+    if (
+      transactions.team1.length > m.team1.transactions.length ||
         transactions.team2.length > m.team2.transactions.length
-      ) {
-        m.team1.transactions = transactions.team1;
-        m.team2.transactions = transactions.team2;
-        emit = true;
-      }
-      return m.save();
-    })
-  );
-  await matches.map(async m => m.save());
+    ) {
+      m.team1.transactions = transactions.team1;
+      m.team2.transactions = transactions.team2;
+      emit = true;
+    }
+    const savedMatch = await m.save();
+    await delay();
+    const resolvedMatches = await p;
+    return [...resolvedMatches, savedMatch];
+  });
   if (emit) io.emit('all-matches', matchesCalculations(matches));
 }, 60000);
 
@@ -57,13 +59,13 @@ const matchesCalculations = rawMatches => {
         m.team2.payoff = m.team1.balance * 10;
       } else {
         m.team2.payoff = (m.team1.balance / m.team2.balance < 1) ? m.team1.balance / m.team2.balance + 1 : m.team1.balance / m.team2.balance;
-      }     
+      }
     }
 
     return m;
   });
 
   return matches;
-}
+};
 
 module.exports = io;
