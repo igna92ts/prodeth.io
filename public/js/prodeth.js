@@ -37,8 +37,48 @@ const prodeth = {
                 $(".finished-bets .no-results").remove();
                 //finished
             } else if(new Date() >= new Date(data[i].date)){
-                $(".closed-bets .no-results").remove();
                 //closed
+                $(".closed-bets .no-results").remove();
+                
+                $(".closed-bets").append(`
+                    <div class="row">
+                        <div class="six wide column center aligned">
+                            <div class="ui tiny image" data-tooltip="${data[i].team1.country.name}">
+                                <img src="/images/flags/${data[i].team1.country.flag}.png">
+                            </div>
+                            <div class="country-code">${data[i].team1.country.code}</div>
+                            <a class="ui green big label payoff" data-inverted="" data-tooltip="This is the current payoff for betting ${data[i].team1.country.name}." data-position="bottom center">x${parseFloat(data[i].team1.payoff).toFixed(2)} ETH</a>
+                        </div>
+                        <div class="four wide column versus vertical-center">
+                            VS
+                        </div>
+                        <div class="six wide column center aligned">
+                            <div class="ui tiny image" data-tooltip="${data[i].team2.country.name}">
+                                <img src="/images/flags/${data[i].team2.country.flag}.png">
+                            </div>
+                            <div class="country-code">${data[i].team2.country.code}</div>
+                            <a class="ui green big label payoff" data-inverted="" data-tooltip="This is the current payoff for betting ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(data[i].team2.payoff).toFixed(2)} ETH</a>
+                        </div>
+                        <div class="sixteen wide column center aligned">
+                            <a href="http://www.fifa.com/worldcup/matches/" target="_blank">
+                                <div class="ui black button">
+                                    <i class="external alternate icon"></i>
+                                    Match status
+                                </div>
+                            </a>
+                            <div class="ui black button" id="match-details-${prodeth.matchsCounter}">
+                                <i class="left info circle icon"></i>
+                                Bet status
+                            </div>
+                        </div>
+                    </div>
+                `)
+
+                $(`#match-details-${prodeth.matchsCounter}`).click(()=>{
+                    prodeth.matchDetails(data[i])
+                });
+
+                prodeth.matchsCounter++;
             } else {
                 $(".open-bets .no-results").remove();
                 //open
@@ -115,7 +155,7 @@ const prodeth = {
         prodeth.selectedMatch = data;
         $(".modal#match-details").modal("show")
         $(".modal#match-details .content").html(`
-        <div class="ui grid">
+        <div class="ui grid stackable">
             <div class="row">
                 <div class="seven wide column center aligned">
                     <div class="ui image small" data-tooltip="${data.team1.country.name}">
@@ -123,7 +163,7 @@ const prodeth = {
                     </div>
                     <div class='country-code'>${data.team1.country.name}</div>
                     <a class="ui green label big payoff payoff-${data.team1.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team1.country.name}." data-position="bottom center">x${parseFloat(data.team1.payoff).toFixed(2)} ETH</a>
-                    <a class="ui black label big" id="bet-team1">Bet on this team</a>
+                    ${new Date() > new Date(data.date) && !data.payed ? `<div class="ui black button big disabled">Match in progress</div>` : `<div class="ui black button big" id="bet-team1">Bet on this team</div>`}
                     <div class="ui blue label large basic" style="margin-top:10px">
                         Pool 
                         <div class="detail" id='pool-${data.team1.address}'>${parseFloat(data.team1.balance).toFixed(3)} ETH</div>
@@ -138,7 +178,7 @@ const prodeth = {
                     </div>
                     <div class='country-code'>${data.team2.country.name}</div>
                     <a class="ui green label big payoff payoff-${data.team2.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team2.country.name}." data-position="bottom center">x${parseFloat(data.team2.payoff).toFixed(2)} ETH</a>
-                    <a class="ui black label big" id="bet-team2">Bet on this team</a>
+                    ${new Date() > new Date(data.date) && !data.payed ? `<div class="ui black button big disabled">Match in progress</div>` : `<div class="ui black button big" id="bet-team2">Bet on this team</div>`}
                     <div class="ui blue label large basic" style="margin-top:10px">
                         Pool 
                         <div class="detail" id='pool-${data.team2.address}'>${parseFloat(data.team2.balance).toFixed(3)} ETH</div>
@@ -150,7 +190,7 @@ const prodeth = {
                     <table class="ui collapsing celled small table" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th colspan="2" style="text-align: center;">Last Transactions<a class="ui red empty circular label live"></a>LIVE</th>
+                                <th colspan="2" style="text-align: center;">${new Date() > new Date(data.date) ? `All Transactions`  : `Last Transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
                             </tr>
                             <tr>
                                 <th>From Address</th>
@@ -176,7 +216,7 @@ const prodeth = {
                     <table class="ui collapsing celled small table" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th colspan="2" style="text-align: center;">Last Transactions<a class="ui red empty circular label live"></a>LIVE</th>
+                                <th colspan="2" style="text-align: center;">${new Date() > new Date(data.date) ? `All Transactions`  : `Last Transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
                             </tr>
                             <tr>
                                 <th>From Address</th>

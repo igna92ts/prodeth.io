@@ -61,6 +61,11 @@ body{
 	font-size:12px;
 }
 
+/*fix popups on scrollable modals*/
+.content.scrolling{
+    overflow: inherit !important;
+}
+
 .live{
 	transform: translateY(1px);
 	margin: 0px 3px 0px 10px !important;
