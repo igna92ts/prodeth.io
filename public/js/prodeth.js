@@ -34,32 +34,35 @@ const prodeth = {
                 continue;
             }
             if(data[i].payed){
+                $(".finished-bets .no-results").remove();
                 //finished
             } else if(new Date() >= new Date(data[i].date)){
+                $(".closed-bets .no-results").remove();
                 //closed
             } else {
+                $(".open-bets .no-results").remove();
                 //open
                 $(".open-bets").append(`
                     <div class="row">
-                        <div class="four wide column center aligned">
+                        <div class="five wide column center aligned">
                             <div class="ui tiny image" data-tooltip="${data[i].team1.country.name}">
                                 <img src="/images/flags/${data[i].team1.country.flag}.png">
                             </div>
                             <div class='country-code'>${data[i].team1.country.code}</div>
-                            <a class="ui green label payoff payoff-${data[i].team1.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team1.country.name}." data-position="bottom center">x${parseFloat(data[i].team1.payoff).toFixed(2)} ETH</a>
+                            <a class="ui big green label payoff payoff-${data[i].team1.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team1.country.name}." data-position="bottom center">x${parseFloat(data[i].team1.payoff).toFixed(2)} ETH</a>
                         </div>
                         <div class="two wide column versus vertical-center">
                             VS
                         </div>
-                        <div class="four wide column center aligned">
+                        <div class="five wide column center aligned">
                             <div class="ui tiny image" data-tooltip="${data[i].team2.country.name}">
                                 <img src="/images/flags/${data[i].team2.country.flag}.png">
                             </div>
                             <div class='country-code'>${data[i].team2.country.code}</div>
-                            <a class="ui green label payoff payoff-${data[i].team2.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(data[i].team2.payoff).toFixed(2)} ETH</a>
+                            <a class="ui big green label payoff payoff-${data[i].team2.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(data[i].team2.payoff).toFixed(2)} ETH</a>
                         </div>
-                        <div class="six wide column center aligned vertical-center">
-                            <a class="ui black label timeleft" id='timeleft-${prodeth.matchsCounter}' data-inverted="" data-tooltip="Time left before bet closes." data-position="top center"></a>
+                        <div class="four wide column center aligned vertical-center">
+                            <a class="ui black label timeleft" id='timeleft-${prodeth.matchsCounter}' data-inverted="" data-tooltip="Time left before bet closes and match starts." data-position="top center"></a>
                             <div class="ui primary button" id="match-details-${prodeth.matchsCounter}">
                                 Bet now
                                 <i class="right chevron icon"></i>
@@ -104,6 +107,7 @@ const prodeth = {
         }
 
         $(".loading").remove();
+        $(".no-results").show();
 
         prodeth.allMatches = data;
     },

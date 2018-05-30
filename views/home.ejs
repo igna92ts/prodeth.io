@@ -6,8 +6,8 @@
 	</h5>
 	<div class="ui stackable grid">
 		<div class="three column row">
-			<div class="eight wide column">
-				<div class="ui top attached header inverted">
+			<div class="nine wide column">
+				<div class="ui top attached header inverted prodeth-header">
 					<h3>Open bets</h3>
 				</div>
 				<div class="ui segment attached">
@@ -18,51 +18,75 @@
 								<p>Loading...</p>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="four wide column">
-				<div class="ui top attached header inverted">
-					<h3>Closed bets</h3>
-				</div>
-				<div class="ui segment attached">
-					<div class="ui vertically divided grid closed-bets">
-						<div class="row">
-							<div class="seven wide column center aligned">
-								<div class="ui tiny image" data-tooltip="Argentina">
-									<img src="/images/flags/argentina.png">
-								</div>
-								<a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x1.42 ETH</a>
-							</div>
-							<div class="two wide column versus vertical-center">
-								VS
-							</div>
-							<div class="seven wide column center aligned">
-								<div class="ui tiny image" data-tooltip="Brazil">
-									<img src="/images/flags/brazil.png">
-								</div>
-								<a class="ui green label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x2.58 ETH</a>
-							</div>
+						<div class="row no-results">
 							<div class="sixteen wide column center aligned">
-								<div class="ui orange button">
-									<i class="left info circle icon"></i>
-									Bet status
-								</div>
+								<p>There are no open bets at the moment.</p>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="four wide column">
-				<div class="ui top attached header inverted">
-					<h3>Finished bets</h3>
+			<div class="seven wide column">
+				<div class="row">
+					<div class="ui top attached header inverted prodeth-header">
+						<h3>Closed bets</h3>
+					</div>
+					<div class="ui segment attached">
+						<div class="ui vertically divided grid closed-bets">
+							<div class="row">
+								<div class="six wide column center aligned">
+									<div class="ui tiny image" data-tooltip="Argentina">
+										<img src="/images/flags/argentina.png">
+									</div>
+									<div class="country-code">KSA</div>
+									<a class="ui green big label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x1.42 ETH</a>
+								</div>
+								<div class="four wide column versus vertical-center">
+									VS
+								</div>
+								<div class="six wide column center aligned">
+									<div class="ui tiny image" data-tooltip="Brazil">
+										<img src="/images/flags/brazil.png">
+									</div>
+									<div class="country-code">KSA</div>
+									<a class="ui green big label payoff" data-inverted="" data-tooltip="This is the current payoff for betting this team." data-position="bottom center">x2.58 ETH</a>
+								</div>
+								<div class="sixteen wide column center aligned">
+									<div class="ui black button">
+										<i class="left info circle icon"></i>
+										Bet status
+									</div>
+									<a href="http://www.fifa.com/worldcup/matches/" target="_blank">
+										<div class="ui black button">
+											<i class="external alternate icon"></i>
+											Match status
+										</div>
+									</a>
+								</div>
+								
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="ui segment attached">
-					<div class="ui vertically divided grid finished-bets">
-						<div class="row loading">
-							<div class="sixteen wide column center aligned">
-								<div class="ui active centered inline loader"></div>
-								<p>Loading...</p>
+				<div class="ui divider"></div>
+				<div class="row">
+					<div class="four wide column">
+						<div class="ui top attached header inverted prodeth-header">
+							<h3>Finished bets</h3>
+						</div>
+						<div class="ui segment attached">
+							<div class="ui vertically divided grid finished-bets">
+								<div class="row loading">
+									<div class="sixteen wide column center aligned">
+										<div class="ui active centered inline loader"></div>
+										<p>Loading...</p>
+									</div>
+								</div>
+								<div class="row no-results">
+									<div class="sixteen wide column center aligned">
+										<p>There are no finished bets at the moment.</p>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
