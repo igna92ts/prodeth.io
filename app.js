@@ -25,10 +25,24 @@ mongoose.connect('mongodb://localhost/prodeth');
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-  console.log('connected to database');
-
   // create match method
-  //ethscanService.createMatch();
+  ethscanService.createMatch('RUS', 'KSA', '2018-06-14 18:00', 'Europe/Moscow');
+  ethscanService.createMatch('EGY', 'URU', '2018-06-15 17:00', 'Europe/Ekaterinburg');
+  ethscanService.createMatch('MAR', 'IRN', '2018-06-15 18:00', 'Asia/St_Petersburg');
+  ethscanService.createMatch('POR', 'ESP', '2018-06-15 21:00', 'Asia/Sochi');
+  ethscanService.createMatch('FRA', 'AUS', '2018-06-16 13:00', 'Asia/Kazan');
+  ethscanService.createMatch('ARG', 'ISL', '2018-06-16 16:00', 'Europe/Moscow');
+  ethscanService.createMatch('PER', 'DEN', '2018-06-16 19:00', 'Asia/Saransk');
+  ethscanService.createMatch('CRO', 'NGA', '2018-06-16 21:00', 'Europe/Kaliningrad');
+  ethscanService.createMatch('CRC', 'SRB', '2018-06-17 16:00', 'Asia/Samara');
+  ethscanService.createMatch('GER', 'MEX', '2018-06-17 18:00', 'Europe/Moscow');
+  ethscanService.createMatch('BRA', 'SUI', '2018-06-17 21:00', 'Asia/Rostov-On-Don');
+  ethscanService.createMatch('SWE', 'KOR', '2018-06-18 15:00', 'Asia/Nizhny_Novgorod');
+  ethscanService.createMatch('BEL', 'PAN', '2018-06-18 18:00', 'Asia/Sochi');
+  ethscanService.createMatch('TUN', 'ENG', '2018-06-18 21:00', 'Europe/Volgograd');
+  ethscanService.createMatch('COL', 'JPN', '2018-06-19 15:00', 'Asia/Saransk');
+  ethscanService.createMatch('POL', 'SEN', '2018-06-19 18:00', 'Europe/Moscow');
+  ethscanService.createMatch('RUS', 'EGY', '2018-06-19 21:00', 'Asia/St_Petersburg');
 });
 
 app.use('/', indexRouter);
