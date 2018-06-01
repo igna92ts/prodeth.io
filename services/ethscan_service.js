@@ -140,7 +140,7 @@ const countries = {
   },
 };
 
-exports.createMatch = (countryCode1, countryCode2, date, timezone) => {
+exports.createMatch = async (countryCode1, countryCode2, date, timezone) => {
   const account1 = web3.eth.accounts.create();
   const account2 = web3.eth.accounts.create();
 
@@ -154,9 +154,8 @@ exports.createMatch = (countryCode1, countryCode2, date, timezone) => {
       transactions: [],
       country: {
         name: countries[countryCode1].name,
-        code: countries[countryCode1].code,
+        code: countryCode1,
         flag: countries[countryCode1].flag,
-        code: countryCode1
       }
     },
     team2: {
@@ -165,15 +164,14 @@ exports.createMatch = (countryCode1, countryCode2, date, timezone) => {
       transactions: [],
       country: {
         name: countries[countryCode2].name,
-        code: countries[countryCode2].code,
+        code: countryCode2,
         flag: countries[countryCode2].flag,
-        code: countryCode2
       }
     },
     date: moment.tz(date, timezone).valueOf(),
     payed: false
   });
-  match.save();
+  await match.save();
 };
 
 const getTransaction = address => {
