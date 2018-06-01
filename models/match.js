@@ -18,11 +18,14 @@ const account = {
   }
 };
 
-const matchSquema = mongoose.Schema({
-  team1: account,
-  team2: account,
-  date: { type: Date, required: true },
-  payed: { type: Boolean, required: true }
-});
+const matchSquema = mongoose.Schema(
+  {
+    team1: account,
+    team2: account,
+    date: { type: Date, required: true },
+    payed: { type: Boolean, required: true }
+  },
+  { autoIndex: false }
+);
 
 module.exports = mongoose.model('Match', matchSquema);
