@@ -163,7 +163,7 @@ const countries = {
   },
   "POL": {
     name: "Poland",
-    flag: "poland"
+    flag: "republic-of-poland"
   },
   "SEN": {
     name: "Senegal",

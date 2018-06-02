@@ -106,3 +106,24 @@ body{
            background-color: rgba(255,0,0,1)
     }
 }
+
+
+.small-match .country-code{
+    font-size:15px !important;
+}
+
+.small-match .ui.label.payoff{
+    font-size:10px !important;
+}
+
+.small-match .ui.tiny.image{
+    width:30px;
+}
+
+.small-match .country-code{
+    display:inline-block;
+}
+
+.small-match .versus{
+    font-size:20px;
+}

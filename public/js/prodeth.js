@@ -1,11 +1,11 @@
 const prodeth = {
     allMatches: [],
     selectedMatch: null,
-    matchsCounter: 0,
-    matchsRender: (data) => {
+    matchesCounter: 0,
+    renderMatches: (data) => {
         for(let i = 0; i < data.length; i++){
             //check already rendered
-            if(prodeth.allMatches.some(m => m.date === data[i].date && data[i].team1.country.code === m.team1.country.code && data[i].team2.country.code === m.team2.country.code)){
+            if(prodeth.allMatches.some(m => m.date === data[i].date && data[i].team1.country.code === m.team1.country.code && data[i].team2.country.code === m.team2.country.code) && $(`.match[team1='${data[i].team1.country.code}'][team2='${data[i].team2.country.code}'][date='${data[i].date}']`)){
                 //update payoffs
                 $(`.payoff-${data[i].team1.address}`).text(`x${parseFloat(data[i].team1.payoff).toFixed(2)} ETH`);
                 $(`.payoff-${data[i].team2.address}`).text(`x${parseFloat(data[i].team2.payoff).toFixed(2)} ETH`);
@@ -16,20 +16,20 @@ const prodeth = {
                     prodeth.selectedMatch.date === data[i].date && $("#match-details").hasClass("visible") &&
                     (data[i].team1.transactions.length > prodeth.selectedMatch.team1.transactions.length || 
                     data[i].team2.transactions.length > prodeth.selectedMatch.team2.transactions.length)){
-                        //match details opened and new transaction incoming from one of the teams
-                        
-                        //update eth pool
-                        $(`#pool-${data[i].team1.address}`).text(parseFloat(data[i].team1.balance).toFixed(3));
-                        $(`#pool-${data[i].team2.address}`).text(parseFloat(data[i].team2.balance).toFixed(3));
+                    //match details opened and new transaction incoming from one of the teams
+                    
+                    //update eth pool
+                    $(`#pool-${data[i].team1.address}`).text(parseFloat(data[i].team1.balance).toFixed(3));
+                    $(`#pool-${data[i].team2.address}`).text(parseFloat(data[i].team2.balance).toFixed(3));
 
-                        //add new transactions for team1
-                        for(let j=0; j<data[i].team1.transactions.length - prodeth.selectedMatch.team1.transactions.length; j++){
-                            prodeth.addNewTransaction(data[i].team1.address, data[i].team1.transactions[j]);
-                        }
-                        //add new transactions for team2
-                        for(let j=0; j<data[i].team2.transactions.length - prodeth.selectedMatch.team2.transactions.length; j++){
-                            prodeth.addNewTransaction(data[i].team2.address, data[i].team2.transactions[j]);
-                        }
+                    //add new transactions for team1
+                    for(let j=0; j<data[i].team1.transactions.length - prodeth.selectedMatch.team1.transactions.length; j++){
+                        prodeth.addNewTransaction(data[i].team1.address, data[i].team1.transactions[j]);
+                    }
+                    //add new transactions for team2
+                    for(let j=0; j<data[i].team2.transactions.length - prodeth.selectedMatch.team2.transactions.length; j++){
+                        prodeth.addNewTransaction(data[i].team2.address, data[i].team2.transactions[j]);
+                    }
                 }
                 continue;
             }
@@ -41,7 +41,7 @@ const prodeth = {
                 $(".closed-bets .no-results").remove();
                 
                 $(".closed-bets").append(`
-                    <div class="row">
+                    <div class="row match" team1="${data[i].team1.country.code}" team2="${data[i].team2.country.code}" date="${data[i].date}" >
                         <div class="six wide column center aligned">
                             <div class="ui tiny image" data-tooltip="${data[i].team1.country.name}">
                                 <img src="/images/flags/${data[i].team1.country.flag}.png">
@@ -66,7 +66,7 @@ const prodeth = {
                                     Match status
                                 </div>
                             </a>
-                            <div class="ui black button" id="match-details-${prodeth.matchsCounter}">
+                            <div class="ui black button" id="match-details-${prodeth.matchesCounter}">
                                 <i class="left info circle icon"></i>
                                 Bet status
                             </div>
@@ -74,17 +74,17 @@ const prodeth = {
                     </div>
                 `)
 
-                $(`#match-details-${prodeth.matchsCounter}`).click(()=>{
+                $(`#match-details-${prodeth.matchesCounter}`).click(()=>{
                     prodeth.matchDetails(data[i])
                 });
 
-                prodeth.matchsCounter++;
+                prodeth.matchesCounter++;
             } else {
                 $(".open-bets .no-results").remove();
                 //open
                 $(".open-bets").append(`
-                    <div class="row">
-                        <div class="five wide column center aligned">
+                    <div class="row match ${$(".big-match").length >= 3 ? "small-match" : "big-match"}" team1="${data[i].team1.country.code}" team2="${data[i].team2.country.code}" date="${data[i].date}" >
+                        <div class="five wide column center aligned vertical-center">
                             <div class="ui tiny image" data-tooltip="${data[i].team1.country.name}">
                                 <img src="/images/flags/${data[i].team1.country.flag}.png">
                             </div>
@@ -94,7 +94,7 @@ const prodeth = {
                         <div class="two wide column versus vertical-center">
                             VS
                         </div>
-                        <div class="five wide column center aligned">
+                        <div class="five wide column center aligned vertical-center">
                             <div class="ui tiny image" data-tooltip="${data[i].team2.country.name}">
                                 <img src="/images/flags/${data[i].team2.country.flag}.png">
                             </div>
@@ -102,8 +102,8 @@ const prodeth = {
                             <a class="ui big green label payoff payoff-${data[i].team2.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(data[i].team2.payoff).toFixed(2)} ETH</a>
                         </div>
                         <div class="four wide column center aligned vertical-center">
-                            <a class="ui black label timeleft" id='timeleft-${prodeth.matchsCounter}' data-inverted="" data-tooltip="Time left before bet closes and match starts." data-position="top center"></a>
-                            <div class="ui primary button" id="match-details-${prodeth.matchsCounter}">
+                            <a class="ui black label timeleft" id='timeleft-${prodeth.matchesCounter}' data-inverted="" data-tooltip="Time left before bet closes and match starts." data-position="top center"></a>
+                            <div class="ui primary button" id="match-details-${prodeth.matchesCounter}">
                                 Bet now
                                 <i class="right chevron icon"></i>
                             </div>
@@ -124,9 +124,19 @@ const prodeth = {
         
                     $(`#timeleft-${id}`).text(`${days}d ${hours}h ${minutes}m ${seconds}s`);
         
+                    if(distance < 86400 && $(`#timeleft-${id}`).is('.black, .red')) {
+                        //1 day left
+                        $(`#timeleft-${id}`).removeClass("black red").addClass("yellow")
+                    }
+
+                    if(distance < 3600 && $(`#timeleft-${id}`).is('.black, .yellow')) {
+                        //one hour left
+                        $(`#timeleft-${id}`).removeClass("black yellow").addClass("red")
+                    }
+
                     if (distance < 0) {
-                        if(interval) clearInterval(interval);
-                        $(`#timeleft-${id}`).text("This bet is closed.");
+                        $(`#timeleft-${id}`).parent().parent().remove();
+                        prodeth.renderMatches(prodeth.allMatches);
                     }
                 }
                 const countdownIntervalFunction = id => {
@@ -135,14 +145,14 @@ const prodeth = {
                     }, 1000);
                 }
 
-                countdownFunction(prodeth.matchsCounter);
-                countdownIntervalFunction(prodeth.matchsCounter);
+                countdownFunction(prodeth.matchesCounter);
+                countdownIntervalFunction(prodeth.matchesCounter);
 
-                $(`#match-details-${prodeth.matchsCounter}`).click(()=>{
+                $(`#match-details-${prodeth.matchesCounter}`).click(()=>{
                     prodeth.matchDetails(data[i])
                 });
 
-                prodeth.matchsCounter++;
+                prodeth.matchesCounter++;
             }
         }
 
