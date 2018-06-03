@@ -27,7 +27,7 @@ setInterval(async () => {
     await helpers.delay(250);
     const resolvedMatches = await p;
     return [...resolvedMatches, savedMatch];
-  });
+  },[]);
   if (emit) io.emit('all-matches', matchService.matchesCalculations(matches));
 }, 60000);
 

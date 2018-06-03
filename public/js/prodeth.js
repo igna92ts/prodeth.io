@@ -34,11 +34,9 @@ const prodeth = {
                 continue;
             }
             if(data[i].payed){
-                $(".finished-bets .no-results").remove();
                 //finished
             } else if(new Date() >= new Date(data[i].date)){
                 //closed
-                $(".closed-bets .no-results").remove();
                 
                 $(".closed-bets").append(`
                     <div class="row match" team1="${data[i].team1.country.code}" team2="${data[i].team2.country.code}" date="${data[i].date}" >
@@ -83,7 +81,7 @@ const prodeth = {
                 $(".open-bets .no-results").remove();
                 //open
                 $(".open-bets").append(`
-                    <div class="row match ${$(".big-match").length >= 3 ? "small-match" : "big-match"}" team1="${data[i].team1.country.code}" team2="${data[i].team2.country.code}" date="${data[i].date}" >
+                    <div class="row match ${$(".open-bets .big-match").length >= 3 ? "small-match" : "big-match"}" team1="${data[i].team1.country.code}" team2="${data[i].team2.country.code}" date="${data[i].date}" >
                         <div class="five wide column center aligned vertical-center">
                             <div class="ui tiny image" data-tooltip="${data[i].team1.country.name}">
                                 <img src="/images/flags/${data[i].team1.country.flag}.png">
@@ -157,9 +155,12 @@ const prodeth = {
         }
 
         $(".loading").remove();
-        $(".no-results").show();
 
         prodeth.allMatches = data;
+
+        if($(".open-bets .match.big-match").length < 3) {
+            $(".open-bets .match").slice(0,3).removeClass("small-match").addClass("big-match")
+        }
     },
     matchDetails: (data) => {
         prodeth.selectedMatch = data;

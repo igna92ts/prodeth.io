@@ -28,7 +28,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', async () => {
   // create match method
   try {
-    await matchService.createMatch('RUS', 'KSA', '2018-06-14 18:00', 'Europe/Moscow'); // 'Europe/Moscow');
+    /*await matchService.createMatch('RUS', 'KSA', '2018-06-14 18:00', 'Europe/Moscow'); // 'Europe/Moscow');
     await matchService.createMatch('EGY', 'URU', '2018-06-15 17:00', 'Europe/Moscow'); // 'Europe/Ekaterinburg');
     await matchService.createMatch('MAR', 'IRN', '2018-06-15 18:00', 'Europe/Moscow'); // 'Asia/St_Petersburg');
     await matchService.createMatch('POR', 'ESP', '2018-06-15 21:00', 'Europe/Moscow'); // 'Asia/Sochi');
@@ -44,7 +44,7 @@ db.once('open', async () => {
     await matchService.createMatch('TUN', 'ENG', '2018-06-18 21:00', 'Europe/Moscow'); // 'Europe/Volgograd');
     await matchService.createMatch('COL', 'JPN', '2018-06-19 15:00', 'Europe/Moscow'); // 'Asia/Saransk');
     await matchService.createMatch('POL', 'SEN', '2018-06-19 18:00', 'Europe/Moscow'); // 'Europe/Moscow');
-    await matchService.createMatch('RUS', 'EGY', '2018-06-19 21:00', 'Europe/Moscow'); // 'Asia/St_Petersburg');
+    await matchService.createMatch('RUS', 'EGY', '2018-06-19 21:00', 'Europe/Moscow'); // 'Asia/St_Petersburg');*/
   } catch (err) {
     console.log(err);
   }
