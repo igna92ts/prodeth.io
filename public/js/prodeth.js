@@ -210,10 +210,10 @@ const prodeth = {
             </div>
             <div class="row">
                 <div class="eight wide column center aligned">
-                    <table class="ui collapsing celled small table" style="width: 100%;">
+                    <table class="ui collapsing celled small table unstackable" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th colspan="2" style="text-align: center;">${new Date() > new Date(data.date) ? `All Transactions`  : `Last Transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
+                                <th colspan="2" style="text-align: center;">${data.team1.country.name}${new Date() > new Date(data.date) ? ` All Transactions`  : ` Last Transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
                             </tr>
                             <tr>
                                 <th>From Address</th>
@@ -236,10 +236,10 @@ const prodeth = {
                     </table>
                 </div>
                 <div class="eight wide column center aligned">
-                    <table class="ui collapsing celled small table" style="width: 100%;">
+                    <table class="ui collapsing celled small table unstackable" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th colspan="2" style="text-align: center;">${new Date() > new Date(data.date) ? `All Transactions`  : `Last Transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
+                                <th colspan="2" style="text-align: center;">${data.team2.country.name}${new Date() > new Date(data.date) ? ` All Transactions`  : ` Last Transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
                             </tr>
                             <tr>
                                 <th>From Address</th>
@@ -287,6 +287,9 @@ const prodeth = {
                 :
                 `
                 <div class="ui floating message">
+                    <div class="ui red inverted segment">
+                        <b>IMPORTANT:</b> Do <b>NOT</b> send funds directly from exchanges to Prodeth's addresses. We cannot pay back to those wallets. <a href="/faq" target="_blank"><b>Read more</b></a>.
+                    </div>
                     It seems you don't have <a href="https://metamask.io/">MetaMask</a> on your browser, but don't worry!
                     <br>
                     You can still do the bet by sending your desired amount to this match team address:
@@ -296,7 +299,7 @@ const prodeth = {
                         Copy
                     </button>
                     <div class="ui red inverted segment">
-                        <b>IMPORTANT:</b> Do <b>NOT</b> send funds directly from exchanges to Prodeth's addresses. We cannot pay back to those wallets. <a href="/faq" target="_blank"><b>Read more</b></a>.
+                        <b>IMPORTANT:</b> Do <b>NOT</b> send funds directly from exchanges to Prodeth's addresses. We cannot pay back to those wallets. <a href="/faq" target="_blank"><b>Read more</b></a>. Yeah, we put this twice in case you didn't read the one above.
                     </div>
                 </div>
                 `

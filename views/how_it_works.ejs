@@ -2,10 +2,6 @@
 
 <style>
 
-.ui.steps .step .title {
-     text-align: left;
- }
-
 .description{
 	font-size:18px;
 }
@@ -31,8 +27,8 @@
 	How it works
 </h1>
 
-<div class="ui container center aligned">
-	<div class="ui steps top attached left aligned" style="margin:0px 0 20px 0px">
+<div class="ui container">
+	<div class="ui steps top attached" style="margin:0px 0 20px 0px">
 		<div class="step">
 			<i class="flag icon"></i>
 			<div class="content">
@@ -61,7 +57,7 @@
 	<div class="ui grid stackable">
 		<div class="three column row">
 			<div class="column">
-				<div class="ui segment teal">
+				<div class="ui segment teal center aligned">
 					<div class="ui image small">
 						<img src="/images/history.svg">
 					</div>
@@ -70,7 +66,7 @@
 				</div>
 			</div>
 			<div class="column">
-				<div class="ui segment blue">
+				<div class="ui segment blue center aligned">
 					<div class="ui image small">
 						<img src="/images/blockchain.svg">
 					</div>
@@ -79,7 +75,7 @@
 				</div>
 			</div>
 			<div class="column">
-				<div class="ui segment violet">
+				<div class="ui segment violet center aligned">
 					<div class="ui image small">
 						<img src="/images/ethereum.svg">
 					</div>
@@ -89,5 +85,6 @@
 			</div>
 		</div>
 	</div>
+	<p style="padding-top:40px; font-size:20px; text-align:center;">For more useful information, like how the payoffs are calculated, please read the <a href="/faq">FAQ</a>.</p>
 </div>
 <%- include includes/footer.ejs %>
