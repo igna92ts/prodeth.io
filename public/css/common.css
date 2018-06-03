@@ -127,3 +127,11 @@ body{
 .small-match .versus{
     font-size:20px;
 }
+
+.loading > div{
+    margin-bottom: 0px !important;
+}
+
+.no-results > div{
+    margin-bottom: 0px !important;
+}

@@ -3,7 +3,20 @@ const prodeth = {
     selectedMatch: null,
     matchesCounter: 0,
     renderMatches: (data) => {
+        $(".no-results").show();
         for(let i = 0; i < data.length; i++){
+
+            if(data[i].payed){
+                //finished results
+                $(".finished-bets .no-results").hide();
+            } else if(new Date() >= new Date(data[i].date)){
+                $(".closed-bets .no-results").hide();
+                //closed results
+            } else {
+                $(".open-bets .no-results").hide();
+                //open results
+            }
+
             //check already rendered
             if(prodeth.allMatches.some(m => m.date === data[i].date && data[i].team1.country.code === m.team1.country.code && data[i].team2.country.code === m.team2.country.code) && $(`.match[team1='${data[i].team1.country.code}'][team2='${data[i].team2.country.code}'][date='${data[i].date}']`)){
                 //update payoffs
@@ -78,7 +91,6 @@ const prodeth = {
 
                 prodeth.matchesCounter++;
             } else {
-                $(".open-bets .no-results").remove();
                 //open
                 $(".open-bets").append(`
                     <div class="row match ${$(".open-bets .big-match").length >= 3 ? "small-match" : "big-match"}" team1="${data[i].team1.country.code}" team2="${data[i].team2.country.code}" date="${data[i].date}" >
