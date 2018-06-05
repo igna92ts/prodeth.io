@@ -6,7 +6,7 @@ router.get('/', (req, res, next) => {
   res.render('home', {
     title: "World Cup Ethereum Betting",
     breadcrumb: "",
-    socketURL: "http://localhost:3000"
+    socketURL: process.env.API_BASE_URL
   });
 });
 
@@ -14,7 +14,7 @@ router.get('/faq', (req, res, next) => {
   res.render('faq', {
     title: "FAQ",
     breadcrumb: "FAQ",
-    socketURL: "http://localhost:3000"
+    socketURL: process.env.API_BASE_URL
   });
 });
 
@@ -22,7 +22,7 @@ router.get('/how-it-works', (req, res, next) => {
   res.render('how_it_works', {
     title: "How it works",
     breadcrumb: "How it works",
-    socketURL: "http://localhost:3000"
+    socketURL: process.env.API_BASE_URL
   });
 });
 

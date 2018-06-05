@@ -30,7 +30,7 @@ setInterval(async () => {
         const resolvedMatches = await p;
         return [...resolvedMatches, savedMatch];
       }
-    },[]);
+    }, []);
     if (emit) io.emit('all-matches', matchService.matchesCalculations(matches));
   } catch (err) {
     console.log(err);
