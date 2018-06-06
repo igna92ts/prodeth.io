@@ -181,11 +181,11 @@ const prodeth = {
         <div class="ui grid stackable">
             <div class="row">
                 <div class="seven wide column center aligned">
-                    <div class="ui image small" data-tooltip="${data.team1.country.name}">
+                    <div class="ui image small">
                         <img src="/images/flags/${data.team1.country.flag}.png">
                     </div>
                     <div class='country-code'>${data.team1.country.name}</div>
-                    <a class="ui green label big payoff payoff-${data.team1.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team1.country.name}." data-position="bottom center">x${parseFloat(data.team1.payoff).toFixed(2)} ETH</a>
+                    <div class="ui green label big payoff payoff-${data.team1.address}">x${parseFloat(data.team1.payoff).toFixed(2)} ETH</div>
                     ${new Date() > new Date(data.date) && !data.payed ? `<div class="ui black button big disabled">Match in progress</div>` : `<div class="ui black button big" id="bet-team1">Bet on this team</div>`}
                     <div class="ui blue label large basic" style="margin-top:10px">
                         Pool 
@@ -196,11 +196,11 @@ const prodeth = {
                     VS
                 </div>
                 <div class="seven wide column center aligned">
-                    <div class="ui image small" data-tooltip="${data.team2.country.name}">
+                    <div class="ui image small">
                         <img src="/images/flags/${data.team2.country.flag}.png">
                     </div>
                     <div class='country-code'>${data.team2.country.name}</div>
-                    <a class="ui green label big payoff payoff-${data.team2.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data.team2.country.name}." data-position="bottom center">x${parseFloat(data.team2.payoff).toFixed(2)} ETH</a>
+                    <div class="ui green label big payoff payoff-${data.team2.address}">x${parseFloat(data.team2.payoff).toFixed(2)} ETH</div>
                     ${new Date() > new Date(data.date) && !data.payed ? `<div class="ui black button big disabled">Match in progress</div>` : `<div class="ui black button big" id="bet-team2">Bet on this team</div>`}
                     <div class="ui blue label large basic" style="margin-top:10px">
                         Pool 
@@ -213,7 +213,7 @@ const prodeth = {
                     <table class="ui collapsing celled small table unstackable" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th colspan="2" style="text-align: center;">${data.team1.country.name}${new Date() > new Date(data.date) ? ` All Transactions`  : ` Last Transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
+                                <th colspan="2" style="text-align: center;">${data.team1.country.name}'s${new Date() > new Date(data.date) ? ` all transactions`  : ` last transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
                             </tr>
                             <tr>
                                 <th>From Address</th>
@@ -224,7 +224,7 @@ const prodeth = {
                             ${data.team1.transactions.length <= 0 ? 
                             `
                             <tr id="no-transactions-${data.team1.address}">
-                                <td colspan="2" style="text-align:center;">There are no transactions yet.</td>
+                                <td colspan="2" style="text-align:center;"><p>There are no transactions yet.</p><div class='ui label green'>The first transaction has a no fee bonus!</div></td>
                             </tr>
                             ` 
                             : data.team1.transactions.reduce((result, t) => {
@@ -239,7 +239,7 @@ const prodeth = {
                     <table class="ui collapsing celled small table unstackable" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th colspan="2" style="text-align: center;">${data.team2.country.name}${new Date() > new Date(data.date) ? ` All Transactions`  : ` Last Transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
+                                <th colspan="2" style="text-align: center;">${data.team2.country.name}'s${new Date() > new Date(data.date) ? ` all transactions`  : ` last transactions<a class="ui red empty circular label live"></a>LIVE`}</th>
                             </tr>
                             <tr>
                                 <th>From Address</th>
@@ -248,7 +248,7 @@ const prodeth = {
                         </thead>
                         <tbody id="transactions-${data.team2.address}">
                             <tr id="no-transactions-${data.team2.address}">
-                                <td colspan="2" style="text-align:center;">There are no transactions yet.</td>
+                                <td colspan="2" style="text-align:center;"><p>There are no transactions yet.</p><div class='ui label green'>The first transaction has a no fee bonus!</div></td>
                             </tr>
                             ${data.team2.transactions.reduce((result, t) => {
                                 return result+prodeth.addNewTransactionHTML(t)
@@ -281,7 +281,7 @@ const prodeth = {
                 <h3>How much would you like to bet on this team?</h3>
                 <div class="ui right big labeled input">
                     <label for="amount" class="ui label">ETH</label>
-                    <input type="number" placeholder="Amount" id="amount" min="0.05" value="0.1"> 
+                    <input type="number" placeholder="Amount" id="amount" min="0.01" value="0.01"> 
                 </div>
                 `
                 :
@@ -292,7 +292,7 @@ const prodeth = {
                     </div>
                     It seems you don't have <a href="https://metamask.io/">MetaMask</a> on your browser, but don't worry!
                     <br>
-                    You can still do the bet by sending your desired amount to this match team address:
+                    You can still do the bet <b>(0.01 ETH minimum)</b> by sending your desired amount to this match team address:
                     <pre>${goal.address}</pre>
                     <button class="ui teal right labeled icon button copy-button" data-clipboard-text="${goal.address}">
                         <i class="copy icon"></i>
