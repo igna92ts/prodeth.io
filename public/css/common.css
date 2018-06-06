@@ -79,6 +79,11 @@ body{
     /* Opera */
 }
 
+.header-logo{
+    width: 50%;
+    min-width: 370px;
+}
+
 @keyframes blink {
     0% {
            background-color: rgba(255,0,0,1)
