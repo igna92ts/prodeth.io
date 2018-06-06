@@ -80,8 +80,7 @@ body{
 }
 
 .header-logo{
-    width: 50%;
-    min-width: 370px;
+    width: 40%;
 }
 
 @keyframes blink {
