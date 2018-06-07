@@ -209,3 +209,11 @@ exports.createMatch = async (countryCode1, countryCode2, date, timezone) => {
     return match.save();
   }
 };
+
+exports.deleteMatch = (countryCode1, countryCode2, date, timezone) => {
+  return Match.deleteOne({
+    'team1.country.code': countryCode1,
+    'team2.country.code': countryCode2,
+    date: moment.tz(date, timezone).valueOf()
+  });
+};

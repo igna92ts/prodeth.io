@@ -27,31 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 mongoose.connect('mongodb://localhost/prodeth');
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', async () => {
-  // create match method
-  try {
-    /*
-    await matchService.createMatch('RUS', 'KSA', '2018-06-14 18:00', 'Europe/Moscow');
-    await matchService.createMatch('EGY', 'URU', '2018-06-15 17:00', 'Asia/Yekaterinburg');
-    await matchService.createMatch('MAR', 'IRN', '2018-06-15 18:00', 'Europe/Moscow');
-    await matchService.createMatch('POR', 'ESP', '2018-06-15 21:00', 'Europe/Moscow');
-    await matchService.createMatch('FRA', 'AUS', '2018-06-16 13:00', 'Europe/Moscow');
-    await matchService.createMatch('ARG', 'ISL', '2018-06-16 16:00', 'Europe/Moscow');
-    await matchService.createMatch('PER', 'DEN', '2018-06-16 19:00', 'Europe/Moscow');
-    await matchService.createMatch('CRO', 'NGA', '2018-06-16 21:00', 'Europe/Kaliningrad');
-    await matchService.createMatch('CRC', 'SRB', '2018-06-17 16:00', 'Europe/Samara');
-    await matchService.createMatch('GER', 'MEX', '2018-06-17 18:00', 'Europe/Moscow');
-    await matchService.createMatch('BRA', 'SUI', '2018-06-17 21:00', 'Europe/Moscow');
-    await matchService.createMatch('SWE', 'KOR', '2018-06-18 15:00', 'Europe/Moscow');
-    await matchService.createMatch('BEL', 'PAN', '2018-06-18 18:00', 'Europe/Moscow');
-    await matchService.createMatch('TUN', 'ENG', '2018-06-18 21:00', 'Europe/Moscow');
-    await matchService.createMatch('COL', 'JPN', '2018-06-19 15:00', 'Europe/Moscow');
-    await matchService.createMatch('POL', 'SEN', '2018-06-19 18:00', 'Europe/Moscow');
-    await matchService.createMatch('RUS', 'EGY', '2018-06-19 21:00', 'Europe/Moscow');
-    */
-  } catch (err) {
-    console.log(err);
-  }
+db.once('open', () => {
+  console.log('database connected');
 });
 
 app.use('/', indexRouter);
