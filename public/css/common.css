@@ -61,6 +61,35 @@ body{
 	font-size:12px;
 }
 
+@media only screen and (max-width: 767px){
+    .pay-address{
+        font-size:3vw;
+    }
+    .description-slgn{
+        font-size:26px !important;
+    }
+
+    .header-logo{
+        width:350px !important;
+    }
+
+    .page-title{
+        margin: 3em 0 0em 0 !important;
+    }
+}
+
+@media only screen and (max-width: 432px){
+    .header-logo{
+        width:100% !important;
+    }
+}
+
+.description-slgn{
+    font-size:35px;
+    padding: 14px 0px;
+    font-weight: bold;
+}
+
 .live{
 	transform: translateY(1px);
 	margin: 0px 3px 0px 10px !important;

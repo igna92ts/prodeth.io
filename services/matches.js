@@ -5,7 +5,7 @@ const Match = require('../models/match'),
   moment = require('moment-timezone');
 
 exports.getMatches = async () => {
-  return Match.find({}, { 'team1.privateKey': 0, 'team2.privateKey': 0 });
+  return Match.find({}, { 'team1.privateKey': 0, 'team2.privateKey': 0 }).sort('date');
 };
 
 exports.matchesCalculations = rawMatches => {

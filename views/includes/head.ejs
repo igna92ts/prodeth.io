@@ -25,7 +25,7 @@
 	</head>
 	<body>
 		<div class="main-content">
-			<div class="ui inverted menu stackable">
+			<div class="ui inverted menu">
 				<div class="ui container">
 					<a href="/" class="header item">
 						Prodeth.io
@@ -33,7 +33,7 @@
 					<a href="/" class="item">Home</a>
 					<a href="/how-it-works" class="item">How it works</a>
 					<a href="/faq" class="item">FAQ</a>
-					<div href="#" class="item floated right" id="balance" style="white-space: pre;"></div>
+					<div href="#" class="computer only item floated right" id="balance" style="white-space: pre;"></div>
 				</div>
 			</div>
 
@@ -42,14 +42,14 @@
 					<%if (breadcrumb !== "") { %>
 					<div style="text-align:left;">
 						<div class="ui breadcrumb">
-							<a class="section">Home</a>
+							<a class="section" href="/">Home</a>
 							<i class="right chevron icon divider"></i>
 							<div class="active section"><%= breadcrumb %></div>
 						</div>
 					</div>
 					<% } %>
 					<img class="header-logo" src="/images/logos/logo-hq.png">
-					<h1 style="font-size: 35px;">Bet with Ethereum on this <span style="font-family: Dusha;">2018 FIFA WORLD CUP RUSSIA</span>!</h1>
+					<p class="description-slgn">Bet with Ethereum on this <span style="font-family: Dusha;">2018 FIFA WORLD CUP RUSSIA</span>!</p>
 				</div>
 
 				<div class="ui divider"></div>

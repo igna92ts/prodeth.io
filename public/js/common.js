@@ -13,7 +13,7 @@ $(document).ready(()=>{
 		}
 	} else {
 		//metamask not installed
-		$("#balance").html(`We recommend you to use  <a href="https://metamask.io/">MetaMask</a>`)
+		$("#balance").html(`We recommend you to use <a style="font-weight: bold;" target="_blank" href="https://metamask.io/">MetaMask</a>`)
 	}
 
 	var clipboard = new ClipboardJS('.copy-button');

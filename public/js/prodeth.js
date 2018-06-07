@@ -71,15 +71,19 @@ const prodeth = {
                             <a class="ui green big label payoff" data-inverted="" data-tooltip="This is the current payoff for betting ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(data[i].team2.payoff).toFixed(2)} ETH</a>
                         </div>
                         <div class="sixteen wide column center aligned">
-                            <a href="http://www.fifa.com/worldcup/matches/" target="_blank">
-                                <div class="ui black button">
-                                    <i class="external alternate icon"></i>
-                                    Match status
+                            <div class="ui grid">
+                                <div class="eight wide computer sixteen wide tablet column">
+                                    <a class="ui black button" href="http://www.fifa.com/worldcup/matches/" target="_blank">
+                                        <i class="external alternate icon"></i>
+                                        Match status
+                                    </a>
                                 </div>
-                            </a>
-                            <div class="ui black button" id="match-details-${prodeth.matchesCounter}">
-                                <i class="left info circle icon"></i>
-                                Bet status
+                                <div class="eight wide computer sixteen wide tablet column">
+                                    <div class="ui black button" id="match-details-${prodeth.matchesCounter}">
+                                        <i class="left info circle icon"></i>
+                                        Bet status
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -94,24 +98,24 @@ const prodeth = {
                 //open
                 $(".open-bets").append(`
                     <div class="row match ${$(".open-bets .big-match").length >= 3 ? "small-match" : "big-match"}" team1="${data[i].team1.country.code}" team2="${data[i].team2.country.code}" date="${data[i].date}" >
-                        <div class="five wide column center aligned vertical-center">
+                        <div class="five wide computer six wide tablet column center aligned vertical-center">
                             <div class="ui tiny image" data-tooltip="${data[i].team1.country.name}">
                                 <img src="/images/flags/${data[i].team1.country.flag}.png">
                             </div>
                             <div class='country-code'>${data[i].team1.country.code}</div>
                             <a class="ui big green label payoff payoff-${data[i].team1.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team1.country.name}." data-position="bottom center">x${parseFloat(data[i].team1.payoff).toFixed(2)} ETH</a>
                         </div>
-                        <div class="two wide column versus vertical-center">
+                        <div class="two wide computer four wide tablet column versus vertical-center">
                             VS
                         </div>
-                        <div class="five wide column center aligned vertical-center">
+                        <div class="five wide computer six wide tablet column center aligned vertical-center">
                             <div class="ui tiny image" data-tooltip="${data[i].team2.country.name}">
                                 <img src="/images/flags/${data[i].team2.country.flag}.png">
                             </div>
                             <div class='country-code'>${data[i].team2.country.code}</div>
                             <a class="ui big green label payoff payoff-${data[i].team2.address}" data-inverted="" data-tooltip="This is the current payoff for betting on ${data[i].team2.country.name}." data-position="bottom center">x${parseFloat(data[i].team2.payoff).toFixed(2)} ETH</a>
                         </div>
-                        <div class="four wide column center aligned vertical-center">
+                        <div class="four wide computer sixteen wide tablet column center aligned vertical-center">
                             <a class="ui black label timeleft" id='timeleft-${prodeth.matchesCounter}' data-inverted="" data-tooltip="Time left before bet closes and match starts." data-position="top center"></a>
                             <div class="ui primary button" id="match-details-${prodeth.matchesCounter}">
                                 Bet now
@@ -188,6 +192,7 @@ const prodeth = {
                     <div class="ui green label big payoff payoff-${data.team1.address}">x${parseFloat(data.team1.payoff).toFixed(2)} ETH</div>
                     ${new Date() > new Date(data.date) && !data.payed ? `<div class="ui black button big disabled">Match in progress</div>` : `<div class="ui black button big" id="bet-team1">Bet on this team</div>`}
                     <div class="ui blue label large basic" style="margin-top:10px">
+                        <a target="_blank" data-tooltip="Transactions" href="https://etherscan.io/address/${data.team1.address}"><i class="icon external alternate"></i></a>
                         Pool 
                         <div class="detail" id='pool-${data.team1.address}'>${parseFloat(data.team1.balance).toFixed(3)} ETH</div>
                     </div>
@@ -203,6 +208,7 @@ const prodeth = {
                     <div class="ui green label big payoff payoff-${data.team2.address}">x${parseFloat(data.team2.payoff).toFixed(2)} ETH</div>
                     ${new Date() > new Date(data.date) && !data.payed ? `<div class="ui black button big disabled">Match in progress</div>` : `<div class="ui black button big" id="bet-team2">Bet on this team</div>`}
                     <div class="ui blue label large basic" style="margin-top:10px">
+                    <a target="_blank" data-tooltip="Transactions" href="https://etherscan.io/address/${data.team2.address}"><i class="icon external alternate"></i></a>
                         Pool 
                         <div class="detail" id='pool-${data.team2.address}'>${parseFloat(data.team2.balance).toFixed(3)} ETH</div>
                     </div>
@@ -281,7 +287,7 @@ const prodeth = {
                 <h3>How much would you like to bet on this team?</h3>
                 <div class="ui right big labeled input">
                     <label for="amount" class="ui label">ETH</label>
-                    <input type="number" placeholder="Amount" id="amount" min="0.01" value="0.01"> 
+                    <input type="number" placeholder="Amount" id="amount" min="0.001" value="0.01"> 
                 </div>
                 `
                 :
@@ -292,15 +298,12 @@ const prodeth = {
                     </div>
                     It seems you don't have <a href="https://metamask.io/">MetaMask</a> on your browser, but don't worry!
                     <br>
-                    You can still do the bet <b>(0.01 ETH minimum)</b> by sending your desired amount to this match team address:
-                    <pre>${goal.address}</pre>
+                    You can still do the bet by sending your desired amount to this match team address:
+                    <pre class="pay-address">${goal.address}</pre>
                     <button class="ui teal right labeled icon button copy-button" data-clipboard-text="${goal.address}">
                         <i class="copy icon"></i>
                         Copy
                     </button>
-                    <div class="ui red inverted segment">
-                        <b>IMPORTANT:</b> Do <b>NOT</b> send funds directly from exchanges to Prodeth's addresses. We cannot pay back to those wallets. <a href="/faq" target="_blank"><b>Read more</b></a>. Yeah, we put this twice in case you didn't read the one above.
-                    </div>
                 </div>
                 `
             }         
