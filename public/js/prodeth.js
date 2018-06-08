@@ -192,7 +192,7 @@ const prodeth = {
                     <div class="ui green label big payoff payoff-${data.team1.address}">x${parseFloat(data.team1.payoff).toFixed(2)} ETH</div>
                     ${new Date() > new Date(data.date) && !data.payed ? `<div class="ui black button big disabled">Match in progress</div>` : `<div class="ui black button big" id="bet-team1">Bet on this team</div>`}
                     <div class="ui blue label large basic" style="margin-top:10px">
-                        <a target="_blank" data-tooltip="Transactions" href="https://etherscan.io/address/${data.team1.address}"><i class="icon external alternate"></i></a>
+                        <a target="_blank" data-tooltip="Transactions" href="${etherscanURL}address/${data.team1.address}"><i class="icon external alternate"></i></a>
                         Pool 
                         <div class="detail" id='pool-${data.team1.address}'>${parseFloat(data.team1.balance).toFixed(3)} ETH</div>
                     </div>
@@ -208,7 +208,7 @@ const prodeth = {
                     <div class="ui green label big payoff payoff-${data.team2.address}">x${parseFloat(data.team2.payoff).toFixed(2)} ETH</div>
                     ${new Date() > new Date(data.date) && !data.payed ? `<div class="ui black button big disabled">Match in progress</div>` : `<div class="ui black button big" id="bet-team2">Bet on this team</div>`}
                     <div class="ui blue label large basic" style="margin-top:10px">
-                    <a target="_blank" data-tooltip="Transactions" href="https://etherscan.io/address/${data.team2.address}"><i class="icon external alternate"></i></a>
+                    <a target="_blank" data-tooltip="Transactions" href="${etherscanURL}address/${data.team2.address}"><i class="icon external alternate"></i></a>
                         Pool 
                         <div class="detail" id='pool-${data.team2.address}'>${parseFloat(data.team2.balance).toFixed(3)} ETH</div>
                     </div>
@@ -312,9 +312,19 @@ const prodeth = {
         if(typeof web3 !== "undefined"){
             $(".modal#bet .actions #close").hide();
             $("#confirm-bet").unbind().click(()=>{
-                web3.eth.sendTransaction({from: web3.eth.accounts[0], to: goal.address, gas:250000, value: web3.toWei($("#amount").val(),"ether") },function(r,e){
-                    console.log(r)
-                    console.log(e)
+                web3.eth.sendTransaction({from: web3.eth.accounts[0], to: goal.address, gas:250000, gasPrice:20, value: web3.toWei($("#amount").val(),"ether") },function(err,txHash){
+                    if(!err){
+                        $("#success").modal("show").find(".content").html(`
+                            <div class="ui container center aligned">
+                                <i class="check icon" style="color:#21ba45; font-size:40px;"></i>
+                                <h1>Transaction done!</h1>
+                                <p>You can check the status of your transaction <a href="${etherscanURL}tx/${txHash}" target="_blank">here</a>!</p>
+                                <p>Your bet will be valid once the transaction is validated by the Ethereum Network. Please wait a few minutes.</p>
+                                <p>You can close this tiny window.</p>
+                                <p style="font-family:Dusha; font-size:30px;">Go ${goal.country.name}!!</p>
+                            </div>
+                        `);
+                    }
                 })
             })
         } else {
@@ -329,7 +339,7 @@ const prodeth = {
     },
     addNewTransactionHTML: (transaction) =>{
         return `<tr>
-            <td class="address-transaction"><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="https://etherscan.io/tx/${transaction.id}"><i class="icon external alternate"></i></a> ${transaction.sender}</td>
+            <td class="address-transaction"><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="${etherscanURL}tx/${transaction.id}"><i class="icon external alternate"></i></a> ${transaction.sender}</td>
             <td class="collapsing">${parseFloat(transaction.amount).toFixed(4)} ETH</td>
         </tr>
         `

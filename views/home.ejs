@@ -94,11 +94,22 @@
 	</div>
 </div>
 
-<div class="ui mini modal" id="error">
-	<div class="header">Oops!</div>
+<div class="ui tiny modal" id="success">
+	<div class="header">Success!</div>
 	<div class="content"></div>
+	<div class="actions">
+		<div class="ui positive button" id="close">
+			Close
+		</div>
+	</div>
 </div>
 	
 <%- include includes/footer.ejs %>
+
+<script>
+	const socketURL = '<%= socketURL %>';
+	const ropstenProvider = '<%= ropstenProvider %>';
+	const etherscanURL = ropstenProvider.trim() !== '' ? 'https://ropsten.etherscan.io/' : 'https://etherscan.io/';
+</script>
 
 <script src="/js/socket.js"></script>

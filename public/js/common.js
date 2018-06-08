@@ -1,5 +1,10 @@
 $(document).ready(()=>{
 	if(typeof web3 !== "undefined"){
+
+		if(ropstenProvider.trim() !== ''){
+			web3.setProvider(new Web3.providers.HttpProvider(ropstenProvider));
+		}
+
 		//get balance from metamask
 		let balance = 0;
 
