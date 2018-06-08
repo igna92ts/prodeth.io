@@ -253,12 +253,17 @@ const prodeth = {
                             </tr>
                         </thead>
                         <tbody id="transactions-${data.team2.address}">
+                            ${data.team2.transactions.length <= 0 ? 
+                            `
                             <tr id="no-transactions-${data.team2.address}">
                                 <td colspan="2" style="text-align:center;"><p>There are no transactions yet.</p><div class='ui label green'>The first transaction has a no fee bonus!</div></td>
                             </tr>
-                            ${data.team2.transactions.reduce((result, t) => {
-                                return result+prodeth.addNewTransactionHTML(t)
-                            }, "")}
+                            `
+                            : data.team2.transactions.reduce((result, t) => {
+                                return `${result+prodeth.addNewTransactionHTML(t)}`
+                            }, "")
+
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -319,7 +324,7 @@ const prodeth = {
                                 <i class="check icon" style="color:#21ba45; font-size:40px;"></i>
                                 <h1>Transaction done!</h1>
                                 <p>You can check the status of your transaction <a href="${etherscanURL}tx/${txHash}" target="_blank">here</a>!</p>
-                                <p>Your bet will be valid once the transaction is validated by the Ethereum Network. Please wait a few minutes.</p>
+                                <p>Your bet will be valid once the transaction is validated by the <b>Ethereum Network</b>. Please wait a few minutes.</p>
                                 <p>You can close this tiny window.</p>
                                 <p style="font-family:Dusha; font-size:30px;">Go ${goal.country.name}!!</p>
                             </div>
@@ -340,7 +345,7 @@ const prodeth = {
     addNewTransactionHTML: (transaction) =>{
         return `<tr>
             <td class="address-transaction"><a target="_blank" data-inverted="" data-tooltip="Transaction details" data-position="left center" href="${etherscanURL}tx/${transaction.id}"><i class="icon external alternate"></i></a> ${transaction.sender}</td>
-            <td class="collapsing">${parseFloat(transaction.amount).toFixed(4)} ETH</td>
+            <td class="collapsing">${parseFloat(parseFloat(transaction.amount).toFixed(4))} ETH</td>
         </tr>
         `
     }
