@@ -7,7 +7,7 @@ router.get('/', (req, res, next) => {
     title: 'World Cup Ethereum Betting',
     breadcrumb: '',
     socketURL: process.env.API_BASE_URL,
-    ropstenProvider: process.env.ROPSTEN_PROVIDER
+    ropstenProvider: typeof process.env.ROPSTEN_PROVIDER !== 'undefined' ? process.env.ROPSTEN_PROVIDER : ''
   });
 });
 
