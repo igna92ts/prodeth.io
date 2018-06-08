@@ -4,14 +4,14 @@ const request = require('request'),
   web3 = new Web3(),
   helpers = require('../helpers');
 
-if(process.env.ROPSTEN_PROVIDER.trim() !== ''){
+if(process.env.ROPSTEN_PROVIDER !== ''){
   web3.setProvider(new Web3.providers.HttpProvider(process.env.ROPSTEN_PROVIDER));
 }
 
 const apiKey = process.env.API_ETHERSCAN;
-const apiHost = process.env.ROPSTEN_PROVIDER.trim() !== '' ? 'http://api-ropsten.etherscan.io' : 'http://api.etherscan.io';
+const apiHost = process.env.ROPSTEN_PROVIDER !== '' ? 'http://api-ropsten.etherscan.io' : 'http://api.etherscan.io';
 const apiUrls = {
-  transactions: `${apiHost}/api?module=account&action=txlist&startblock=5694716&apikey=${apiKey}&sort=desc&address=`
+  transactions: `${apiHost}/api?module=account&action=txlist&apikey=${apiKey}&sort=desc&address=`
 };
 
 const getTransaction = address => {
