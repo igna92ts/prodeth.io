@@ -287,7 +287,7 @@ const prodeth = {
                 <h3>How much would you like to bet on this team?</h3>
                 <div class="ui right big labeled input">
                     <label for="amount" class="ui label">ETH</label>
-                    <input type="number" placeholder="Amount" id="amount" min="0.001" value="0.01"> 
+                    <input type="number" placeholder="Amount" id="amount" step="0.01" min="0.001" value="0.01"> 
                 </div>
                 `
                 :
@@ -312,8 +312,9 @@ const prodeth = {
         if(typeof web3 !== "undefined"){
             $(".modal#bet .actions #close").hide();
             $("#confirm-bet").unbind().click(()=>{
-                web3.eth.sendTransaction({from: web3.eth.accounts[0], to: goal.address, gas:250000, value: web3.toWei($("#amount").val(),"ether") },function(){
-
+                web3.eth.sendTransaction({from: web3.eth.accounts[0], to: goal.address, gas:250000, value: web3.toWei($("#amount").val(),"ether") },function(r,e){
+                    console.log(r)
+                    console.log(e)
                 })
             })
         } else {

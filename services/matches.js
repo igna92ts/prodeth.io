@@ -22,13 +22,13 @@ exports.matchesCalculations = rawMatches => {
 
     if (m.team1.balance > 0 || m.team2.balance > 0) {
       if (m.team1.balance <= 0) {
-        m.team1.payoff = m.team2.balance * 10;
+        m.team1.payoff = 2
       } else {
         m.team1.payoff = (m.team2.balance / m.team1.balance < 1) ? m.team2.balance / m.team1.balance + 1 : m.team2.balance / m.team1.balance;
       }
 
       if (m.team2.balance <= 0) {
-        m.team2.payoff = m.team1.balance * 10;
+        m.team2.payoff = 2
       } else {
         m.team2.payoff = (m.team1.balance / m.team2.balance < 1) ? m.team1.balance / m.team2.balance + 1 : m.team1.balance / m.team2.balance;
       }
