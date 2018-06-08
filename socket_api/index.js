@@ -27,7 +27,7 @@ setInterval(async () => {
         }
         const savedMatch = await m.save();
         await helpers.delay(250);
-        const resolvedMatches = await p;
+        const resolvedMatches = (await p) || [];
         return [...resolvedMatches, savedMatch];
       }
     }, []);

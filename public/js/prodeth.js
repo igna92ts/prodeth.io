@@ -287,7 +287,7 @@ const prodeth = {
                 <h3>How much would you like to bet on this team?</h3>
                 <div class="ui right big labeled input">
                     <label for="amount" class="ui label">ETH</label>
-                    <input type="number" placeholder="Amount" id="amount" step="0.01" min="0.001" value="0.01"> 
+                    <input type="number" placeholder="Amount" id="amount" step="0.01" min="0.01" value="0.01"> 
                 </div>
                 `
                 :
