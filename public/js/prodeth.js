@@ -317,7 +317,7 @@ const prodeth = {
         if(typeof web3 !== "undefined"){
             $(".modal#bet .actions #close").hide();
             $("#confirm-bet").unbind().click(()=>{
-                web3.eth.sendTransaction({from: web3.eth.accounts[0], to: goal.address, gas:250000, value: web3.toWei($("#amount").val(),"ether") },function(err,txHash){
+                web3.eth.sendTransaction({from: web3.eth.accounts[0], to: goal.address, gas:250000, gasPrice:20, value: web3.toWei($("#amount").val(),"ether") },function(err,txHash){
                     if(!err){
                         $("#success").modal("show").find(".content").html(`
                             <div class="ui container center aligned">

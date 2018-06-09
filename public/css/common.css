@@ -88,6 +88,8 @@ body{
     font-size:35px;
     padding: 14px 0px;
     font-weight: bold;
+    margin:15px 0px;
+    line-height:30px;
 }
 
 .live{

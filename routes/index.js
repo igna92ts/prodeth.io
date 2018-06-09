@@ -25,4 +25,11 @@ router.get('/how-it-works', (req, res, next) => {
   });
 });
 
+router.get('/airdrop', (req, res, next) => {
+  res.render('airdrop', {
+    title: 'Register for Airdrop',
+    breadcrumb: 'Airdrop'
+  });
+});
+
 module.exports = router;

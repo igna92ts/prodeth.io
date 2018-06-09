@@ -1,0 +1,54 @@
+<%- include includes/head.ejs %>
+	<div class="ui grid stackable">
+		<div class="six wide column">
+			<div class="ui segment">
+				<h1>Token Announced</h1>
+				<p>On November we will be moving to our new <b>ERC20 token</b> to make the entire Prodeth ecosystem much more reliable and secure.</p>
+				<p>There will be an airdrop sometime on <b>September</b> of <b>500 Prodeth Coins (PDC)</b> only for the registered addresses.</p>
+				<p>Until then, Prodeth will keep working with the actual system.</p>
+				<div class="ui divider"></div>
+				<h1>ICO Details</h1>
+				<p>On October we will be launching our <b>ICO</b> of <b>50,000,000 PDC</b>.</p>
+				<h2>Pre-sale</h2>
+				<p>You will get <b>1500 tokens per ETH</b> on the ICO's first week.</p>
+				<p><b>1250 tokens per ETH</b> on the ICO's second week.</p>
+				<p><b>1000 tokens per ETH</b> on the ICO's third week.</p>
+				<p><b>750 tokens per ETH</b> on the ICO's fourth week.</p>
+				<h2>Public Sale</h2>
+				<p>Any unsold token after the pre-sale will be sold on the public sale at <b>$1.00 USD</b>.</p>
+				<h2>Reserved tokens</h2>
+				<p><b>2,500,000 PDC</b> of all the tokens will be distributed to the developers and <b>7,500,000 PDC</b> will be distributed for marketing campaigns.</p>
+			</div>
+		</div>
+		<div class="ten wide column">
+			<div class="ui segment">
+				<h1>Register for airdrop</h1>
+				<p>
+					Your Ethereum Address:
+					<div class="ui input">
+						<input type="text" placeholder="Ethereum Address" size="42" id="address">
+					</div>
+				</p>
+				<p>
+					Your Email:	
+				<div class="ui input">
+					<input type="text" placeholder="Email" id="email">
+				</div>
+				</p>
+				<div class="ui button green big" onclick="registerForAirdrop()">
+					Register
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script>
+
+const registerForAirdrop = () => {
+	const email = $("#email").val();
+	const address = $("#address").val();
+}
+
+</script>
+
+<%- include includes/footer.ejs %>
