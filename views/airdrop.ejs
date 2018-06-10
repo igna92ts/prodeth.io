@@ -4,7 +4,8 @@
 			<div class="ui segment">
 				<h1>Token Announced</h1>
 				<p>On November we will be moving to our new <b>ERC20 token</b> to make the entire Prodeth ecosystem much more reliable and secure.</p>
-				<p>There will be an airdrop sometime on <b>September</b> of <b>500 Prodeth Coins (PDC)</b> only for the registered addresses.</p>
+				<p>Prodeth will be supporting a larger sport selection such as <b>Tennis</b>, <b>Basketball</b>, <b>American Football</b> and much more.</p>
+				<p>There will be an airdrop sometime on <b>September</b> of <b>500 Prodeth Coins (PDC)</b> only for the registered addresses with a <b>maximum of 1,000,000 PDC</b>.</p>
 				<p>Until then, Prodeth will keep working with the actual system.</p>
 				<div class="ui divider"></div>
 				<h1>ICO Details</h1>
@@ -23,32 +24,75 @@
 		<div class="ten wide column">
 			<div class="ui segment">
 				<h1>Register for airdrop</h1>
-				<p>
-					Your Ethereum Address:
-					<div class="ui input">
-						<input type="text" placeholder="Ethereum Address" size="42" id="address">
+				<p>To register for the airdrop just provide your Ethereum Address and your email. You will have to confirm your email by clicking on the verification link we will send you.</p>
+				<p>We will be seriously checkin every single airdrop subscription to prevent botting the airdrop.</p>
+				<form class="ui fluid form">
+					<div class="field">
+						<label>Ethereum Address:</label>
+						<input type="text" placeholder="Your Ethereum Address" size="42" id="address">
 					</div>
-				</p>
-				<p>
-					Your Email:	
-				<div class="ui input">
-					<input type="text" placeholder="Email" id="email">
-				</div>
-				</p>
-				<div class="ui button green big" onclick="registerForAirdrop()">
-					Register
-				</div>
+					<div class="field">
+						<label>Email</label>
+						<input type="text" placeholder="Your Email" id="email">
+					</div>
+					<div class="ui button green big" onclick="submitForm();">
+						Register
+					</div>
+					<div class="ui error message"></div>
+				</form>
 			</div>
 		</div>
 	</div>
 
 <script>
+$(document).ready(()=>{
+	$('.ui.form').form({
+		fields: {
+			address: {
+				identifier: 'address',
+				rules: [
+					{
+						type: 'empty',
+						prompt: 'Please enter your Ethereum Address'
+					},
+					{
+						type: 'regExp',
+						value: '^0x[a-fA-F0-9]{40}$',
+						prompt: 'Invalid Ethereum Address',
+					}
+				]
+			},
+			email: {
+				identifier: 'email',
+				rules: [
+					{
+						type   : 'empty',
+						prompt : 'Please enter your email'
+					},
+					{
+						type   : 'email',
+						prompt : 'Invalid email'
+					}
+				]
+			},
+		}
+	});
+})
 
-const registerForAirdrop = () => {
-	const email = $("#email").val();
-	const address = $("#address").val();
+const submitForm = () => {
+	if( $('.ui.form').form('is valid')) {
+		$.ajax({
+			url: "register-airdrop",
+			type: "post",
+			success: () => {
+
+			},
+			error: () => {
+
+			}
+		})
+	}
 }
-
 </script>
 
 <%- include includes/footer.ejs %>

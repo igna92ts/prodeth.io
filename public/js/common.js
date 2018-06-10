@@ -14,7 +14,7 @@ $(document).ready(()=>{
 				$("#balance").html(`Current balance: <b>${balance} ETH</b>`);
 			})
 		} else {
-			$("#balance").text(`It seems that you have MetaMask installed but you didn't created an account.`);
+			$("#balance").text(`It seems that you have MetaMask installed but you didn't selected an account.`);
 		}
 	} else {
 		//metamask not installed

@@ -4,7 +4,7 @@ const request = require('request'),
   web3 = new Web3(),
   helpers = require('../helpers');
 
-if(typeof process.env.ROPSTEN_PROVIDER !== 'undefined'){
+if(process.env.ROPSTEN_PROVIDER){
   web3.setProvider(new Web3.providers.HttpProvider(process.env.ROPSTEN_PROVIDER));
 }
 

@@ -101,10 +101,4 @@
 	
 <%- include includes/footer.ejs %>
 
-<script>
-	const socketURL = '<%= socketURL %>';
-	const ropstenProvider = '<%= ropstenProvider %>';
-	const etherscanURL = ropstenProvider.trim() !== '' ? 'https://ropsten.etherscan.io/' : 'https://etherscan.io/';
-</script>
-
 <script src="/js/socket.js"></script>

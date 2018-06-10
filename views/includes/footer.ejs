@@ -18,6 +18,13 @@
 					</div>
 				</div>
 			</div>
+
+			<script>
+				const socketURL = '<%= socketURL %>';
+				const ropstenProvider = '<%= ropstenProvider %>';
+				const etherscanURL = ropstenProvider.trim() !== '' ? 'https://ropsten.etherscan.io/' : 'https://etherscan.io/';
+			</script>
+
 			<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.js"></script>
 			<script src="/js/prodeth.js"></script>
 			<script src="/js/common.js"></script>
