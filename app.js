@@ -9,7 +9,7 @@ const createError = require('http-errors'),
   mongoose = require('mongoose'),
   indexRouter = require('./routes/index'),
   adminRouter = require('./routes/admin'),
-  matchService = require('./services/matches');
+  airdropRouter = require('./routes/airdrop');
 
 const app = express();
 
@@ -33,6 +33,7 @@ db.once('open', () => {
 
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
+app.use('/airdrop', airdropRouter);
 
 app.use((req, res, next) => {
   next(createError(404));

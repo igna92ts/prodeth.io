@@ -15,7 +15,7 @@ setInterval(async () => {
     const rawMatches = await matchService.getMatches();
     let emit = false;
     const matches = await rawMatches.reduce(async (p, m) => {
-      if(new Date(m.date) > new Date()){
+      if (new Date(m.date) > new Date()) {
         const transactions = await etherscan.getTransactions(m);
         if (
           transactions.team1.length > m.team1.transactions.length ||
