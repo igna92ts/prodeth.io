@@ -80,7 +80,7 @@ $(document).ready(()=>{
 })
 
 const submitForm = () => {
-	if( $('.ui.form').form('is valid')) {
+	if( $('.ui.form').form('validate form')) {
 		$.ajax({
 			url: "register-airdrop",
 			type: "post",
