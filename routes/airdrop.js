@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express'),
   router = express.Router(),
   routeHelpers = require('./routeHelpers'),
@@ -50,7 +52,7 @@ router.post('/register', async (req, res, next) => {
       throw errors.badRequest('Wrong Parameters');
     }
   } catch (err) {
-    res.send(err);
+    res.send(err.message);
   }
 });
 
@@ -77,7 +79,7 @@ router.patch('/register', async (req, res, next) => {
       throw errors.badRequest('Wrong Parameters');
     }
   } catch (err) {
-    res.send(err);
+    res.send(err.message);
   }
 });
 
