@@ -38,7 +38,9 @@ router.post('/register', async (req, res, next) => {
   try {
     if (req.body.email && req.body.address) {
       const existingParticipant = await airdropService.findParticipant(req.body.email);
-      if (existingParticipant) throw errors.badRequest('You are already registered');
+      if (existingParticipant && existingParticipant.verified)
+        throw errors.badRequest('You are already registered');
+      else if (existingParticipant) await existingParticipant.remove();
 
       const token = createToken(req.body.email, req.body.address);
       await airdropService.createParticipant(req.body.email, req.body.address, token);
