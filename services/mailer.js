@@ -25,7 +25,7 @@ exports.sendAirdropRegistrationEmail = (email, token) => {
     from: 'team@prodeth.io',
     to: email,
     subject: 'Prodeth Airdrop',
-    html: `<body><a href="${confirmationUrl}">Test Button</a></body>`
+    html: `<body><a href="${confirmationUrl}">Airdrop</a></body>`
   };
   return sendEmail(mailOptions);
 };

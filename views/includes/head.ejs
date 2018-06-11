@@ -24,44 +24,62 @@
 
 	</head>
 	<body>
-		<div class="main-content">
-			<div class="ui inverted menu">
-				<div class="ui container">
-					<a href="/" class="header item">
-						Prodeth.io
-					</a>
-					<a href="/" class="item">Home</a>
-					<a href="/airdrop" class="item">Airdrop</a>
-					<a href="/how-it-works" class="item">How it works</a>
-					<a href="/faq" class="item">FAQ</a>
-					<div href="#" class="computer only item floated right" id="balance" style="white-space: pre;"></div>
+		<div class="ui sidebar inverted vertical menu">
+			<img src="/images/logos/inverted-logo-hq.png" class="sidebar-logo">
+			<a class="item" href="/">
+				Bets
+			</a>
+			<a class="item" href="/airdrop">
+				Airdrop
+			</a>
+			<a class="item" href="/how-it-works">
+				How it works
+			</a>
+			<a class="item" href="/faq">
+				FAQ
+			</a>
+		</div>
+		<div class="pusher">
+			<div class="main-content">
+				<div class="ui inverted icon menu">
+					<div class="ui container">
+						<a href="/" class="only-responsive header item">
+							Prodeth.io
+						</a>
+						<a href="/" class="item">Bets</a>
+						<a href="/airdrop" class="item">Airdrop</a>
+						<a href="/how-it-works" class="item">How it works</a>
+						<a href="/faq" class="item">FAQ</a>
+						<div class="item floated right" id="balance" style="white-space: pre;"></div>
+						<a class="item floated right responsive-bar only-responsive" onclick="$('.ui.sidebar').sidebar('toggle');">
+							<i class="bars icon"></i>
+						</a>
+					</div>
 				</div>
-			</div>
-
-			<div class="ui main container">
-				<div class="ui container center aligned page-title">
-					<%if (breadcrumb !== "") { %>
-					<div style="text-align:left;">
-						<div class="ui breadcrumb">
-							<a class="section" href="/">Home</a>
-							<i class="right chevron icon divider"></i>
-							<div class="active section"><%= breadcrumb %></div>
+				<div class="ui main container">
+					<div class="ui container center aligned page-title">
+						<%if (breadcrumb !== "") { %>
+						<div style="text-align:left;">
+							<div class="ui breadcrumb" style="padding: 15px 0px;">
+								<a class="section" href="/">Home</a>
+								<i class="right chevron icon divider"></i>
+								<div class="active section"><%= breadcrumb %></div>
+							</div>
 						</div>
+						<% } %>
+						<img class="header-logo" src="/images/logos/logo-hq.png">
+						<div class="description-slgn">Bet with Ethereum on this <span style="font-family: Dusha;">2018 FIFA WORLD CUP RUSSIA</span>!</div>
+					
+						<%if (breadcrumb === "") { %>
+						<div class="ui container center aligned">
+							<a class="ui button green big" href="/airdrop">
+								Register for airdrop
+							</a>
+							<a class="ui button black big" href="/how-it-works">
+								How it works
+							</a>
+						</div>
+						<% } %>
 					</div>
-					<% } %>
-					<img class="header-logo" src="/images/logos/logo-hq.png">
-					<div class="description-slgn">Bet with Ethereum on this <span style="font-family: Dusha;">2018 FIFA WORLD CUP RUSSIA</span>!</div>
-				
-					<%if (breadcrumb === "") { %>
-					<div class="ui container center aligned">
-						<a class="ui button green big" href="/airdrop">
-							Register for airdrop
-						</a>
-						<a class="ui button black big" href="/how-it-works">
-							How it works
-						</a>
-					</div>
-					<% } %>
-				</div>
 
-				<div class="ui divider"></div>
+					<div class="ui divider"></div>

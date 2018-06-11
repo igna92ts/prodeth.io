@@ -61,6 +61,10 @@ body{
 	font-size:12px;
 }
 
+.responsive-bar{
+    display: none !important; 
+}
+
 @media only screen and (max-width: 767px){
     .pay-address{
         font-size:3vw;
@@ -76,12 +80,25 @@ body{
     .page-title{
         margin: 3em 0 0em 0 !important;
     }
+
+    .responsive-bar{
+        display: block !important;
+    }
+
+    .ui.menu > .ui.container > .item:not(.only-responsive){
+        display: none !important;
+    }
 }
 
 @media only screen and (max-width: 432px){
     .header-logo{
         width:100% !important;
     }
+}
+
+.sidebar-logo{
+    width: 100%;
+    padding: 30px;
 }
 
 .description-slgn{

@@ -29,8 +29,3 @@ $(document).ready(()=>{
 		e.clearSelection();
 	});
 })
-
-const showError = message => {
-	$(".modal#error").modal("show");
-	$(".modal#error .content").text(message);
-}

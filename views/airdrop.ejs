@@ -35,11 +35,21 @@
 						<label>Email</label>
 						<input type="text" placeholder="Your Email" id="email">
 					</div>
-					<div class="ui button green big" onclick="submitForm();">
+					<div class="ui button green big" id="submit" onclick="submitForm();">
 						Register
 					</div>
 					<div class="ui error message"></div>
 				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="ui tiny modal" id="status-modal">
+		<div class="header"></div>
+		<div class="content"></div>
+		<div class="actions">
+			<div class="ui button" id="close">
+				Done
 			</div>
 		</div>
 	</div>
@@ -81,14 +91,52 @@ $(document).ready(()=>{
 
 const submitForm = () => {
 	if( $('.ui.form').form('validate form')) {
+		$("#submit").addClass("loading");
 		$.ajax({
-			url: "register-airdrop",
+			url: "airdrop/register",
 			type: "post",
-			success: () => {
-
+			data: {
+				address: $("#address").val(),
+				email: $("#email").val()
+			},
+			success: r => {
+				if(r=="OK"){
+					$("#status-modal .header").text("Almost done")
+					$("#status-modal").modal("show").find(".content").html(`
+						<div class="ui container center aligned">
+							<i class="check icon" style="color:#21ba45; font-size:40px;"></i>
+							<h1>Please confirm your email</h1>
+							<p>We've sent you a mail.</p>
+							<p>Please, click on the link on the mail to confirm your email and finish the airdrop registration.</p>
+						</div>
+					`);
+					$("#close").removeClass("negative").addClass("positive").text("Done");
+				} else {
+					$("#status-modal .header").text("Error")
+					$("#status-modal").modal("show").find(".content").html(`
+						<div class="ui container center aligned">
+							<i class="times icon" style="color:#db2828; font-size:40px;"></i>
+							<h1>Oops! Something went wrong</h1>
+							<p>${r.message}.</p>
+						</div>
+					`);
+					$("#close").removeClass("positive").addClass("negative").text("Close");
+				}
 			},
 			error: () => {
-
+				$("#status-modal .header").text("Error")
+				$("#status-modal").modal("show").find(".content").html(`
+					<div class="ui container center aligned">
+						<i class="times icon" style="color:#db2828; font-size:40px;"></i>
+						<h1>Oops! Something went wrong</h1>
+						<p>An error ocurred with your request.</p>
+						<p>Please try again later.</p>
+					</div>
+				`);
+				$("#close").removeClass("positive").addClass("negative").text("Close");
+			},
+			complete:() => {
+				$("#submit").removeClass("loading")
 			}
 		})
 	}
