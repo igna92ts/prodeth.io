@@ -10,7 +10,6 @@ const express = require('express'),
   mailerService = require('../services/mailer');
 
 const { common } = routeHelpers;
-const { JWT_SECRET } = process.env;
 
 router.get('/', (req, res, next) => {
   res.render('airdrop', {
@@ -29,7 +28,7 @@ const createToken = (email, address) => {
       },
       created_at: moment.now()
     },
-    JWT_SECRET,
+    process.env.JWT_SECRET,
     {
       expiresIn: '7d'
     }
@@ -62,7 +61,7 @@ router.patch('/register', async (req, res, next) => {
       const participant = await airdropService.findByToken(req.body.token);
       if (!participant || participant.verified) throw errors.badRequest('Invalid Token');
 
-      jwt.verify(req.body.token, JWT_SECRET, (err, decoded) => {
+      jwt.verify(req.body.token, process.env.JWT_SECRET, (err, decoded) => {
         if (err || participant.address !== decoded.participant.address) {
           throw errors.badRequest('Invalid Token');
         } else {
