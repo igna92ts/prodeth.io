@@ -1,4 +1,6 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer'),
+  path = require('path'),
+  ejs = require('ejs');
 
 const sendEmail = mailOptions => {
   const transporter = nodemailer.createTransport({
@@ -18,14 +20,31 @@ const sendEmail = mailOptions => {
   });
 };
 
+const renderConfirmEmail = url => {
+  return new Promise((resolve, reject) => {
+    ejs.renderFile(
+      path.resolve('../views/confirm_email.ejs'),
+      {
+        url
+      },
+      (err, data, data2) => {
+        if (err) reject(err);
+        resolve(data);
+      }
+    );
+  });
+};
+
 exports.sendAirdropRegistrationEmail = (email, token) => {
   const baseUrl = process.env.API_BASE_URL;
   const confirmationUrl = `${baseUrl}/airdrop/register?token=${token}`;
-  const mailOptions = {
-    from: 'team@prodeth.io',
-    to: email,
-    subject: 'Prodeth Airdrop',
-    html: `<body><a href="${confirmationUrl}">Airdrop</a></body>`
-  };
-  return sendEmail(mailOptions);
+  return renderConfirmEmail(confirmationUrl).then(html => {
+    const mailOptions = {
+      from: '"Prodeth Team" <team@prodeth.io>',
+      to: email,
+      subject: 'Prodeth Airdrop',
+      html
+    };
+    return sendEmail(mailOptions);
+  });
 };
