@@ -1,8 +1,8 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({path: __dirname + '/.env'});
 
 const createError = require('http-errors'),
   express = require('express'),
-  path = require('path'),
   cookieParser = require('cookie-parser'),
   logger = require('morgan'),
   io = require('./socket_api'),

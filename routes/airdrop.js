@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const express = require('express'),
   router = express.Router(),
   routeHelpers = require('./routeHelpers'),

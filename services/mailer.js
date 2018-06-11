@@ -25,7 +25,7 @@ const renderConfirmEmail = url => {
     ejs.renderFile(
       path.resolve('../views/confirm_email.ejs'),
       {
-        url
+        confirmation_url: url
       },
       (err, data, data2) => {
         if (err) reject(err);
