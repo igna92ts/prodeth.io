@@ -23,7 +23,7 @@ const sendEmail = mailOptions => {
 const renderConfirmEmail = url => {
   return new Promise((resolve, reject) => {
     ejs.renderFile(
-      path.resolve('../views/confirm_email.ejs'),
+      path.join(__dirname,'../views/confirm_email.ejs'),
       {
         confirmation_url: url
       },
@@ -42,7 +42,7 @@ exports.sendAirdropRegistrationEmail = (email, token) => {
     const mailOptions = {
       from: '"Prodeth Team" <team@prodeth.io>',
       to: email,
-      subject: 'Prodeth Airdrop',
+      subject: 'Prodeth Airdrop - Email confirmation',
       html
     };
     return sendEmail(mailOptions);
