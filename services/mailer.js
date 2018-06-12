@@ -40,9 +40,9 @@ exports.sendAirdropRegistrationEmail = (email, token) => {
   const confirmationUrl = `${baseUrl}/airdrop/register?token=${token}`;
   return renderConfirmEmail(confirmationUrl).then(html => {
     const mailOptions = {
-      from: '"Prodeth Team" <team@prodeth.io>',
+      from: '"Prodeth.io Team" <team@prodeth.io>',
       to: email,
-      subject: 'Prodeth Airdrop - Email confirmation',
+      subject: 'Prodeth.io Airdrop - Email confirmation',
       html
     };
     return sendEmail(mailOptions);
