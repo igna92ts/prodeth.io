@@ -33,6 +33,14 @@ const createToken = (email, address) => {
   );
 };
 
+router.get('/register', (req, res, next) => {
+  res.render('email_confirmation', {
+    ...common,
+    title: 'Email Confirmation',
+    breadcrumb: 'Email Confirmation'
+  });
+});
+
 router.post('/register', async (req, res, next) => {
   try {
     if (req.body.email && req.body.address) {

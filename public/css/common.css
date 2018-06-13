@@ -12,7 +12,8 @@ body{
     min-height: 100vh;
     flex-direction: column;
 }
-.main-content {
+
+.pusher{
     flex: 1;
     margin-bottom:100px;
 }
@@ -29,6 +30,10 @@ body{
 
 .page-title{
 	margin: 3em 0 3em 0;
+}
+
+.page-title .button{
+    margin-bottom: 0.5em !important;
 }
 
 .versus{

@@ -1,4 +1,4 @@
-<%- include includes/head.ejs %>
+<%- include includes/header.ejs %>
 	<div class="ui grid stackable">
 		<div class="six wide column">
 			<div class="ui segment">
@@ -99,8 +99,8 @@ const submitForm = () => {
 				address: $("#address").val(),
 				email: $("#email").val()
 			},
-			success: r => {
-				if(r=="OK"){
+			success: result => {
+				if(result=="OK"){
 					$("#status-modal .header").text("Almost done")
 					$("#status-modal").modal("show").find(".content").html(`
 						<div class="ui container center aligned">
@@ -117,7 +117,7 @@ const submitForm = () => {
 						<div class="ui container center aligned">
 							<i class="times icon" style="color:#db2828; font-size:40px;"></i>
 							<h1>Oops! Something went wrong</h1>
-							<p>${r.message}.</p>
+							<p>${result}.</p>
 						</div>
 					`);
 					$("#close").removeClass("positive").addClass("negative").text("Close");

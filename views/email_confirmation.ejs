@@ -1,0 +1,45 @@
+<%- include includes/navbar.ejs %>
+
+<div class="ui container center aligned" style="padding-top:100px">
+
+<div class="ui loader inline active"></div>
+<i class="check icon" style="color:#21ba45; font-size:40px; display:none;" id="success-icon"></i>
+<i class="times icon" style="color:#db2828; font-size:40px; display:none;" id="error-icon"></i>
+<h1 id="title">Confirming your Email...</h1>
+<p id="description"></p>
+</div>
+
+<script>
+    $(document).ready(()=>{
+        const url = new URL(window.location.href);
+        const token = url.searchParams.get("token");
+
+        $.ajax({
+            url: "/airdrop/register",
+            method: "patch",
+            data: {token},
+            success: response => {
+                if(response === "OK"){
+                    $("#success-icon").show();
+                    $("#title").text("Email verified")
+                    $("#description").text("Your Email has been verified. You are now listed in our database for the airdrop. Thank you!")
+                } else {
+                    $("#error-icon").show();
+                    $("#title").text("Invalid link")
+                    $("#description").text("This email has been already confirmed or the link is not valid anymore.")
+                }
+            },
+            error: () => {
+                $("#error-icon").show();
+                $("#title").text("Error")
+                $("#description").text("Oops! Something didn't go well there. Please try again later.")
+            },
+            complete: () => {
+                $(".loader").remove();
+            }
+        })
+    })
+</script>
+
+<%- include includes/footer.ejs %>
+
