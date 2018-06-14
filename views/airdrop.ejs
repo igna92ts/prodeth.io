@@ -1,5 +1,5 @@
 <%- include includes/header.ejs %>
-	<div class="ui grid stackable">
+	<div class="ui grid stackable mobile reversed">
 		<div class="six wide column">
 			<div class="ui segment">
 				<h1>Token Announced</h1>
@@ -26,7 +26,7 @@
 				<h1>Register for airdrop</h1>
 				<p>To register for the airdrop just provide your Ethereum Address and your email. You will have to confirm your email by clicking on the verification link we will send you.</p>
 				<p>We will be seriously checkin every single airdrop subscription to prevent botting the airdrop.</p>
-				<form class="ui fluid form">
+				<div class="ui fluid form">
 					<div class="field">
 						<label>Ethereum Address:</label>
 						<input type="text" placeholder="Your Ethereum Address" size="42" id="address">
@@ -39,7 +39,7 @@
 						Register
 					</div>
 					<div class="ui error message"></div>
-				</form>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -56,6 +56,12 @@
 
 <script>
 $(document).ready(()=>{
+	$(document).find("input").keydown((e) => {
+		if(e.which == 13) {
+			submitForm();
+		}
+	});
+
 	$('.ui.form').form({
 		fields: {
 			address: {
@@ -90,7 +96,7 @@ $(document).ready(()=>{
 })
 
 const submitForm = () => {
-	if( $('.ui.form').form('validate form')) {
+	if($('.ui.form').form('validate form')) {
 		$("#submit").addClass("loading");
 		$.ajax({
 			url: "airdrop/register",

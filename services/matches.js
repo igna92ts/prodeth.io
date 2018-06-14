@@ -17,20 +17,27 @@ exports.matchesCalculations = rawMatches => {
     m.team2.balance = m.team2.transactions.reduce((total, t) => total + t.amount, 0);
 
     //  payoff
-    m.team1.payoff = 1.00;
-    m.team2.payoff = 1.00;
+    m.team1.payoff = 1.50;
+    m.team2.payoff = 1.50;
+
+    let calculated = false;
 
     if (m.team1.balance > 0 || m.team2.balance > 0) {
-      if (m.team1.balance <= 0) {
+      if (m.team1.balance <= 0 && m.team2.balance > 0) {
         m.team1.payoff = 2
+        m.team2.payoff = 1.50
+        calculated = true;
       } else {
         m.team1.payoff = (m.team2.balance / m.team1.balance < 1) ? m.team2.balance / m.team1.balance + 1 : m.team2.balance / m.team1.balance;
       }
 
-      if (m.team2.balance <= 0) {
-        m.team2.payoff = 2
-      } else {
-        m.team2.payoff = (m.team1.balance / m.team2.balance < 1) ? m.team1.balance / m.team2.balance + 1 : m.team1.balance / m.team2.balance;
+      if(!calculated) {
+        if (m.team2.balance <= 0 && m.team1.balance > 0) {
+          m.team2.payoff = 2
+          m.team1.payoff = 1.50
+        } else {
+          m.team2.payoff = (m.team1.balance / m.team2.balance < 1) ? m.team1.balance / m.team2.balance + 1 : m.team1.balance / m.team2.balance;
+        }
       }
     }
 

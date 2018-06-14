@@ -90,7 +90,7 @@ const prodeth = {
                 `)
 
                 $(`#match-details-${prodeth.matchesCounter}`).click(()=>{
-                    prodeth.matchDetails(data[i])
+                    prodeth.matchDetails(data[i].team1.country.code,data[i].team2.country.code,data[i].date)
                 });
 
                 prodeth.matchesCounter++;
@@ -138,17 +138,17 @@ const prodeth = {
         
                     $(`#timeleft-${id}`).text(`${days}d ${hours}h ${minutes}m ${seconds}s`);
         
-                    if(distance < 86400 && $(`#timeleft-${id}`).is('.black, .red')) {
+                    if(distance / 1000 < 86400 && $(`#timeleft-${id}`).is('.black, .red')) {
                         //1 day left
                         $(`#timeleft-${id}`).removeClass("black red").addClass("yellow")
                     }
 
-                    if(distance < 3600 && $(`#timeleft-${id}`).is('.black, .yellow')) {
+                    if(distance / 1000 < 3600 && $(`#timeleft-${id}`).is('.black, .yellow')) {
                         //one hour left
                         $(`#timeleft-${id}`).removeClass("black yellow").addClass("red")
                     }
 
-                    if (distance < 0) {
+                    if (distance / 1000 < 0) {
                         $(`#timeleft-${id}`).parent().parent().remove();
                         prodeth.renderMatches(prodeth.allMatches);
                     }
@@ -163,7 +163,7 @@ const prodeth = {
                 countdownIntervalFunction(prodeth.matchesCounter);
 
                 $(`#match-details-${prodeth.matchesCounter}`).click(()=>{
-                    prodeth.matchDetails(data[i])
+                    prodeth.matchDetails(data[i].team1.country.code,data[i].team2.country.code,data[i].date)
                 });
 
                 prodeth.matchesCounter++;
@@ -178,7 +178,13 @@ const prodeth = {
             $(".open-bets .match").slice(0,3).removeClass("small-match").addClass("big-match")
         }
     },
-    matchDetails: (data) => {
+    matchDetails: (code1, code2, date) => {
+        const data = prodeth.allMatches.find(m => {
+            if(m.team1.country.code === code1 && m.team2.country.code === code2 && m.date === date){
+                return m;
+            }
+        })
+
         prodeth.selectedMatch = data;
         $(".modal#match-details").modal("show")
         $(".modal#match-details .content").html(`
