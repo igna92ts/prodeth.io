@@ -2,7 +2,16 @@ const Match = require('../models/match'),
   errors = require('../errors'),
   Web3 = require('web3'),
   web3 = new Web3(),
-  moment = require('moment-timezone');
+  moment = require('moment-timezone'),
+  Tx = require('ethereumjs-tx');
+  
+
+if (process.env.ETHEREUM_NETWORK === "MAINNET") {
+  web3.setProvider(new Web3.providers.HttpProvider(`https://mainnet.infura.io/${process.env.INFURA_KEY}`));
+} else {
+  web3.setProvider(new Web3.providers.HttpProvider(`https://ropsten.infura.io/${process.env.INFURA_KEY}`));
+}
+  
 
 exports.getMatches = async () => {
   return Match.find({}, { 'team1.privateKey': 0, 'team2.privateKey': 0 }).sort('date');
@@ -224,3 +233,178 @@ exports.deleteMatch = (countryCode1, countryCode2, date, timezone) => {
     date: moment.tz(date, timezone).valueOf()
   });
 };
+
+let gasPrice = 10e9;
+let gasLimit = 21000;
+const feeCost = web3.utils.fromWei((gasPrice * gasLimit).toString(),"ether");
+
+gasPrice = web3.utils.toHex(gasPrice);
+gasLimit = web3.utils.toHex(gasLimit);
+
+function sendSigned(txData, privateKey, cb){
+  const privateKeyBuffer = new Buffer(privateKey.substring(2), 'hex')
+  const transaction = new Tx(txData)
+  transaction.sign(privateKeyBuffer)
+  const serializedTx = transaction.serialize().toString('hex')
+  web3.eth.sendSignedTransaction('0x' + serializedTx, cb)
+}
+
+exports.payMatch = async (countryCode1, countryCode2, date, timezone, winnerCode) => {
+  const matchToPay = await Match.findOne({
+    'team1.country.code': countryCode1,
+    'team2.country.code': countryCode2,
+    date: moment.tz(date, timezone).valueOf(), 
+    payed: false
+  });
+
+  const winningFee = 5.00 // 5% fee;
+  const tieFee = 1.00 // 1% fee;
+
+  if(matchToPay.team1.transactions.length <= 0 || matchToPay.team2.transactions.length <= 0){
+    //one of the two teams has no bets so refund everything with no fees
+    await refundTransactions(matchToPay.team1, 0);
+    await refundTransactions(matchToPay.team2, 0);
+  } else {
+    if(matchToPay.team1.country.code === winnerCode) {
+      //team1 win so refund original bets with no fees and pay from team2 with winningFee
+      await refundTransactions(matchToPay.team1, 0);
+      await payTransactions(matchToPay.team2, matchToPay.team1, winningFee);
+    } else if(matchToPay.team2.country.code === winnerCode) {
+      //team2 win so refund original bets with no fees and pay from team1 with winningFee
+      await refundTransactions(matchToPay.team2, 0);
+      await payTransactions(matchToPay.team1, matchToPay.team2, winningFee);
+    } else if(winnerCode === "TIE"){
+      //refund everything with the tie fee
+      await refundTransactions(matchToPay.team1, tieFee);
+      await refundTransactions(matchToPay.team2, tieFee);
+    } else {
+      error.log('Invalid winner code');
+      return;
+    }
+  }
+}
+
+const refundTransactions = async (team, fee) => {
+  let totalProfit = 0;
+
+  let txCounter = 0;
+
+  for(let i = 0; i < team.transactions.length; i++){
+    const transactionProfit = (team.transactions[i].amount * fee / 100);
+    const amount = team.transactions[i].amount - transactionProfit - feeCost;
+
+    web3.eth.getTransactionCount(team.address).then(txCount => {
+      const txData = {
+        nonce: web3.utils.toHex(txCount + txCounter),
+        gasPrice,
+        gasLimit,
+        to: team.transactions[i].sender,
+        from: team.address,
+        value: web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether'))
+      }
+
+      sendSigned(txData, team.privateKey, function(err, result) {
+        if (err) return console.log('error', err)
+        console.log('sent', result)
+      })
+
+      txCounter++;
+    });
+
+    totalProfit += transactionProfit;
+  }
+
+  totalProfit -= feeCost;
+
+  if(totalProfit > 0){
+
+    web3.eth.getTransactionCount(team.address).then(txCount => {
+      const txData = {
+        nonce: web3.utils.toHex(txCount + txCounter),
+        gasPrice,
+        gasLimit,
+        to: process.env.PRODETH_ADDRESS,
+        from: team.address,
+        value: web3.utils.toHex(web3.utils.toWei(totalProfit.toString(), 'ether'))
+      }
+
+      sendSigned(txData, team.privateKey, function(err, result) {
+        if (err) return console.log('error', err)
+        console.log('sent', result)
+      })
+    });
+  }
+}
+
+const payTransactions = async (teamLoser, teamWinner, fee) => {
+  let totalProfit = 0;
+
+  let totalWinningPool = 0;
+  let totalWinnersPool = 0;
+
+  let txCounter = 0;
+
+  for(let i = 0; i < teamLoser.transactions.length; i++){
+    //the pool that is used to pay everyone
+    totalWinningPool += teamLoser.transactions[i].amount;
+  }
+
+  for(let i = 0; i < teamWinner.transactions.length; i++){
+    //the pool of everyone that won
+    totalWinnersPool += teamWinner.transactions[i].amount;
+  }
+
+  for(let i = 0; i < teamWinner.transactions.length; i++){
+    //how much percentage you win from the winning pool
+    const winningPercentage = teamWinner.transactions[i].amount / totalWinnersPool;
+
+    //how much amount you win from the winning pool
+    const winningAmount = winningPercentage * totalWinningPool;
+
+    //prodeth profit
+    const transactionProfit = winningAmount * fee / 100;
+
+    //amount with the fee applied
+    const amountWithFee = winningAmount - transactionProfit - feeCost;
+
+    web3.eth.getTransactionCount(teamLoser.address).then(txCount => {
+      const txData = {
+        nonce: web3.utils.toHex(txCount + i),
+        gasPrice,
+        gasLimit,
+        to: teamWinner.transactions[i].sender,
+        from: teamLoser.address,
+        value: web3.utils.toHex(web3.utils.toWei(amountWithFee.toString(), 'ether'))
+      }
+
+      sendSigned(txData, teamLoser.privateKey, function(err, result) {
+        if (err) return console.log('error', err)
+        console.log('sent', result)
+      })
+
+      txCounter++;
+    });
+
+    totalProfit += transactionProfit;
+  }
+
+  totalProfit -= feeCost;
+
+  if(totalProfit > 0){
+    web3.eth.getTransactionCount(teamLoser.address).then(txCount => {
+      const txData = {
+        nonce: web3.utils.toHex(txCount + txCounter),
+        gasPrice,
+        gasLimit,
+        to: process.env.PRODETH_ADDRESS,
+        from: teamLoser.address,
+        value: web3.utils.toHex(web3.utils.toWei(totalProfit.toString(), 'ether'))
+      }
+
+      sendSigned(txData, teamLoser.privateKey, function(err, result) {
+        if (err) return console.log('error', err)
+        console.log('sent', result)
+      })
+    });
+  }
+}
