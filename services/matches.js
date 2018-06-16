@@ -281,6 +281,10 @@ exports.payMatch = async (countryCode1, countryCode2, date, timezone, winnerCode
       error.log('Invalid winner code');
       return;
     }
+
+    matchToPay.payed = true;
+    matchToPay.save();
+
   }
 }
 
@@ -315,6 +319,8 @@ const refundTransactions = async (team, fee) => {
   }
 
   totalProfit -= feeCost;
+
+  totalProfit = parseFloat(parseFloat(totalProfit).toFixed(16))
 
   if(totalProfit > 0){
 
@@ -361,8 +367,8 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
     //how much amount you win from the winning pool
     const winningAmount = winningPercentage * totalWinningPool;
 
-    //prodeth profit
-    const transactionProfit = winningAmount * fee / 100;
+    //prodeth profit. If this is the first transaction of the team, there's no fee
+    const transactionProfit = winningAmount * (i == 0 ? 0 : fee) / 100;
 
     //amount with the fee applied
     const amountWithFee = winningAmount - transactionProfit - feeCost;
@@ -389,6 +395,8 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
   }
 
   totalProfit -= feeCost;
+
+  totalProfit = parseFloat(parseFloat(totalProfit).toFixed(16))
 
   if(totalProfit > 0){
     web3.eth.getTransactionCount(teamLoser.address).then(txCount => {
