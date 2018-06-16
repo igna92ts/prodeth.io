@@ -281,11 +281,10 @@ exports.payMatch = async (countryCode1, countryCode2, date, timezone, winnerCode
       error.log('Invalid winner code');
       return;
     }
-
-    matchToPay.payed = true;
-    matchToPay.save();
-
   }
+
+  matchToPay.payed = true;
+  matchToPay.save();
 }
 
 const refundTransactions = async (team, fee) => {
