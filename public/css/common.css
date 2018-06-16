@@ -51,6 +51,10 @@ body{
     font-size: 40px;
 }
 
+#match-details .payoff{
+    margin-bottom: 0.5em;
+}
+
 .prodeth-header{
     background: #1b1c1d !important;
 }
