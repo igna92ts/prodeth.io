@@ -48,7 +48,7 @@ const prodeth = {
             }
             if(data[i].payed){
                 //finished
-                $(".finished-bets").append(`
+                $(".finished-bets").prepend(`
                 <div class="row match small-match">
                     <div class="four wide computer six wide tablet column center aligned vertical-center">
                         <div class="ui tiny image" data-tooltip="${data[i].team1.country.name}">
@@ -83,6 +83,8 @@ const prodeth = {
                 $(`#match-details-${prodeth.matchesCounter}`).click(()=>{
                     prodeth.matchDetails(data[i].team1.country.code,data[i].team2.country.code,data[i].date)
                 });
+
+                prodeth.matchesCounter++;
 
             } else if(new Date() >= new Date(data[i].date)){
                 //closed
