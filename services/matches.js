@@ -4,8 +4,7 @@ const Match = require('../models/match'),
   web3 = new Web3(),
   moment = require('moment-timezone'),
   Tx = require('ethereumjs-tx'),
-  BN = require('bignumber.js')
-  
+  BN = require('bignumber.js');
 
 if (process.env.ETHEREUM_NETWORK === "MAINNET") {
   web3.setProvider(new Web3.providers.HttpProvider(`https://mainnet.infura.io/${process.env.INFURA_KEY}`));
@@ -241,12 +240,9 @@ exports.deleteMatch = (countryCode1, countryCode2, date, timezone) => {
   });
 };
 
-let gasPrice = new BN(10e9);
+let gasPrice;
 let gasLimit = new BN(21000);
-const feeCost = web3.utils.fromWei((gasPrice.times(gasLimit)).toString(),"ether");
-
-gasPrice = web3.utils.toHex(gasPrice);
-gasLimit = web3.utils.toHex(gasLimit);
+let feeCost;
 
 function sendSigned(txData, privateKey, cb){
   const privateKeyBuffer = new Buffer(privateKey.substring(2), 'hex');
@@ -281,6 +277,9 @@ exports.payMatch = async (countryCode1, countryCode2, date, timezone, winnerCode
   //Get current gas price
   await web3.eth.getGasPrice().then((r)=>{
     gasPrice = new BN(r);
+    feeCost = gasPrice.times(gasLimit)
+    gasPrice = web3.utils.toHex(gasPrice);
+    gasLimit = web3.utils.toHex(gasLimit);
   });
 
   if(matchToPay.team1.transactions.length <= 0 || matchToPay.team2.transactions.length <= 0){
@@ -327,7 +326,7 @@ const refundTransactions = async (team, fee) => {
         gasLimit,
         to: team.transactions[i].sender,
         from: team.address,
-        value: web3.utils.toHex(amount.toString())
+        value: web3.utils.toHex(amount.decimalPlaces(0,1).toString())
       }
 
       sendSigned(txData, team.privateKey, function(err, result) {
@@ -352,7 +351,7 @@ const refundTransactions = async (team, fee) => {
         gasLimit,
         to: process.env.PRODETH_ADDRESS,
         from: team.address,
-        value: web3.utils.toHex(totalProfit.toString())
+        value: web3.utils.toHex(totalProfit.decimalPlaces(0,1).toString())
       }
 
       sendSigned(txData, team.privateKey, function(err, result) {
@@ -391,13 +390,13 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
     const winningAmount = winningPercentage.times(totalWinningPool);
 
     //If this is the first transaction >= 0.01 eth of the team, there's no fee
-    if(!noFeeBonusGiven && new BN(teamWinner.transactions[i].amount).isGreaterThanOrEqualTo(web3.eth.toWei(0.01, "ether"))){
+    if(!noFeeBonusGiven && new BN(teamWinner.transactions[i].amount).isGreaterThanOrEqualTo(web3.utils.toWei("0.01", "ether"))){
       fee = 0;
       noFeeBonusGiven = true;
     }
 
     //prodeth profit
-    const transactionProfit = winningAmount.times(fee).divided(100);
+    const transactionProfit = winningAmount.times(fee).dividedBy(100);
 
     //amount with the fee applied
     const amountWithFee = winningAmount.minus(transactionProfit).minus(feeCost);
@@ -409,7 +408,7 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
         gasLimit,
         to: teamWinner.transactions[i].sender,
         from: teamLoser.address,
-        value: web3.utils.toHex(amountWithFee.toString())
+        value: web3.utils.toHex(amountWithFee.decimalPlaces(0,1).toString())
       }
 
       sendSigned(txData, teamLoser.privateKey, function(err, result) {
@@ -433,7 +432,7 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
         gasLimit,
         to: process.env.PRODETH_ADDRESS,
         from: teamLoser.address,
-        value: web3.utils.toHex(totalProfit.toString())
+        value: web3.utils.toHex(totalProfit.decimalPlaces(0,1).toString())
       }
 
       sendSigned(txData, teamLoser.privateKey, function(err, result) {
