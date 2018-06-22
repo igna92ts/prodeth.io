@@ -249,23 +249,34 @@ gasPrice = web3.utils.toHex(gasPrice);
 gasLimit = web3.utils.toHex(gasLimit);
 
 function sendSigned(txData, privateKey, cb){
-  const privateKeyBuffer = new Buffer(privateKey.substring(2), 'hex')
-  const transaction = new Tx(txData)
-  transaction.sign(privateKeyBuffer)
-  const serializedTx = transaction.serialize().toString('hex')
-  web3.eth.sendSignedTransaction('0x' + serializedTx, cb)
+  const privateKeyBuffer = new Buffer(privateKey.substring(2), 'hex');
+  const transaction = new Tx(txData);
+  transaction.sign(privateKeyBuffer);
+  const serializedTx = transaction.serialize().toString('hex');
+  web3.eth.sendSignedTransaction('0x' + serializedTx, cb);
 }
 
 exports.payMatch = async (countryCode1, countryCode2, date, timezone, winnerCode) => {
-  const matchToPay = await Match.findOne({
-    'team1.country.code': countryCode1,
-    'team2.country.code': countryCode2,
-    date: moment.tz(date, timezone).valueOf(), 
-    payed: false
-  });
+  let matchToPay;
+  if (!date || !timezone) {
+    const matches = await Match.find({
+      'team1.country.code': countryCode1,
+      'team2.country.code': countryCode2
+    });
+    if (matches.length > 1) throw new Error(`It exists more than one match with countr codes ${countryCode1} and ${countryCode2}`);
+    else matchToPay = matches[0];
+  } else {
+    matchToPay = await Match.findOne({
+      'team1.country.code': countryCode1,
+      'team2.country.code': countryCode2,
+      date: moment.tz(date, timezone).valueOf(), 
+      payed: false
+    });
+  }
+  if (!matchToPay) throw new Error(`No matches found for country codes ${countryCode1} and ${countryCode2}`);
 
-  const winningFee = 5.00 // 5% fee;
-  const tieFee = 1.00 // 1% fee;
+  const winningFee = 5.00; // 5% fee;
+  const tieFee = 1.00; // 1% fee;
 
   //Get current gas price
   await web3.eth.getGasPrice().then((r)=>{
@@ -298,7 +309,7 @@ exports.payMatch = async (countryCode1, countryCode2, date, timezone, winnerCode
   matchToPay.payed = true;
   matchToPay.winnerCode = winnerCode;
   matchToPay.save();
-}
+};
 
 const refundTransactions = async (team, fee) => {
   let totalProfit = new BN(0);
@@ -320,9 +331,9 @@ const refundTransactions = async (team, fee) => {
       }
 
       sendSigned(txData, team.privateKey, function(err, result) {
-        if (err) return console.log('error', err)
-        console.log('sent', result)
-      })
+        if (err) return console.log('error', err);
+        console.log('sent', result);
+      });
 
       txCounter++;
     });
@@ -345,12 +356,12 @@ const refundTransactions = async (team, fee) => {
       }
 
       sendSigned(txData, team.privateKey, function(err, result) {
-        if (err) return console.log('error', err)
-        console.log('sent', result)
-      })
+        if (err) return console.log('error', err);
+        console.log('sent', result);
+      });
     });
   }
-}
+};
 
 const payTransactions = async (teamLoser, teamWinner, fee) => {
   let totalProfit = 0;

@@ -34,7 +34,7 @@ router.delete('/match', async (req, res, next) => {
 
 router.post('/pay', async (req, res, next) => {
   const { countryCode1, countryCode2, date, timezone, winnerCode } = req.body;
-  if (countryCode1 && countryCode2 && date && winnerCode) {
+  if (countryCode1 && countryCode2 && winnerCode) {
     try {
       const result = await matchService.payMatch(countryCode1, countryCode2, date, timezone, winnerCode);
       res.send(result);
