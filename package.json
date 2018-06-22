@@ -6,6 +6,7 @@
     "start": "nodemon --inspect ./bin/www.js"
   },
   "dependencies": {
+    "bignumber.js": "^7.2.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "dotenv": "^6.0.0",
@@ -19,6 +20,7 @@
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.17",
     "mongoose": "^5.1.2",
+    "mongoose-long": "^0.2.1",
     "morgan": "~1.9.0",
     "nodemailer": "^4.6.6",
     "nodemon": "^1.17.5",

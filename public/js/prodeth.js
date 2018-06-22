@@ -289,7 +289,7 @@ const prodeth = {
                                     ` :
                                     `
                                     <tr id="no-transactions-${data.team1.address}">
-                                        <td colspan="2" style="text-align:center;"><p>There are no bets yet.</p><div class='ui label green'>The first bet has a no fee bonus!</div></td>
+                                        <td colspan="2" style="text-align:center;"><p>There are no bets yet.</p><div class='ui label green'>The first bet of 0.01 ETH or more has a no fee bonus!</div></td>
                                     </tr>
                                     `
                             : data.team1.transactions.reduce((result, t) => {
@@ -321,7 +321,7 @@ const prodeth = {
                                     ` :
                                     `
                                     <tr id="no-transactions-${data.team2.address}">
-                                        <td colspan="2" style="text-align:center;"><p>There are no bets yet.</p><div class='ui label green'>The first bet has a no fee bonus!</div></td>
+                                        <td colspan="2" style="text-align:center;"><p>There are no bets yet.</p><div class='ui label green'>The first bet of 0.01 ETH or more has a no fee bonus!</div></td>
                                     </tr>
                                     `
                             : data.team2.transactions.reduce((result, t) => {

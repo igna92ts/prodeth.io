@@ -3,7 +3,8 @@ const Match = require('../models/match'),
   Web3 = require('web3'),
   web3 = new Web3(),
   moment = require('moment-timezone'),
-  Tx = require('ethereumjs-tx');
+  Tx = require('ethereumjs-tx'),
+  BN = require('bignumber.js')
   
 
 if (process.env.ETHEREUM_NETWORK === "MAINNET") {
@@ -22,8 +23,8 @@ exports.matchesCalculations = rawMatches => {
   const matches = rawMatches.map(m => {
     m = m.toJSON();
     //  balance
-    m.team1.balance = m.team1.transactions.reduce((total, t) => total + t.amount, 0);
-    m.team2.balance = m.team2.transactions.reduce((total, t) => total + t.amount, 0);
+    m.team1.balance = m.team1.transactions.reduce((total, t) => new BN(total).plus(new BN(t.amount)), 0);
+    m.team2.balance = m.team2.transactions.reduce((total, t) => new BN(total).plus(new BN(t.amount)), 0);
 
     //  payoff
     m.team1.payoff = 1.50;
@@ -31,24 +32,30 @@ exports.matchesCalculations = rawMatches => {
 
     let calculated = false;
 
-    if (m.team1.balance > 0 || m.team2.balance > 0) {
-      if (m.team1.balance <= 0 && m.team2.balance > 0) {
+    if (new BN(m.team1.balance).isGreaterThan(0) || new BN(m.team2.balance).isGreaterThan(0)) {
+      if (new BN(m.team1.balance).isLessThanOrEqualTo(0) && new BN(m.team2.balance).isGreaterThan(0)) {
         m.team1.payoff = 2
         m.team2.payoff = 1.50
         calculated = true;
       } else {
-        m.team1.payoff = (m.team2.balance / m.team1.balance < 1) ? m.team2.balance / m.team1.balance + 1 : m.team2.balance / m.team1.balance;
+        m.team1.payoff = new BN(m.team2.balance).dividedBy(new BN(m.team1.balance)).plus(1).toNumber();
       }
 
       if(!calculated) {
-        if (m.team2.balance <= 0 && m.team1.balance > 0) {
+        if (new BN(m.team2.balance).isLessThanOrEqualTo(0) && new BN(m.team1.balance).isGreaterThan(0)) {
           m.team2.payoff = 2
           m.team1.payoff = 1.50
         } else {
-          m.team2.payoff = (m.team1.balance / m.team2.balance < 1) ? m.team1.balance / m.team2.balance + 1 : m.team1.balance / m.team2.balance;
+          m.team2.payoff = new BN(m.team1.balance).dividedBy(new BN(m.team2.balance)).plus(1).toNumber();
         }
       }
     }
+
+    //all transactions from wei to eth
+    m.team1.balance = new BN(web3.utils.fromWei(m.team1.balance.toString(), 'ether')).toNumber();
+    m.team2.balance = new BN(web3.utils.fromWei(m.team2.balance.toString(), 'ether')).toNumber();
+    m.team1.transactions.map(t => { t.amount = new BN(web3.utils.fromWei(t.amount.toString(), 'ether')).toNumber() })
+    m.team2.transactions.map(t => { t.amount = new BN(web3.utils.fromWei(t.amount.toString(), 'ether')).toNumber() })
 
     return m;
   });
@@ -234,9 +241,9 @@ exports.deleteMatch = (countryCode1, countryCode2, date, timezone) => {
   });
 };
 
-let gasPrice = 10e9;
-let gasLimit = 21000;
-const feeCost = web3.utils.fromWei((gasPrice * gasLimit).toString(),"ether");
+let gasPrice = new BN(10e9);
+let gasLimit = new BN(21000);
+const feeCost = web3.utils.fromWei((gasPrice.times(gasLimit)).toString(),"ether");
 
 gasPrice = web3.utils.toHex(gasPrice);
 gasLimit = web3.utils.toHex(gasLimit);
@@ -259,6 +266,11 @@ exports.payMatch = async (countryCode1, countryCode2, date, timezone, winnerCode
 
   const winningFee = 5.00 // 5% fee;
   const tieFee = 1.00 // 1% fee;
+
+  //Get current gas price
+  await web3.eth.getGasPrice().then((r)=>{
+    gasPrice = new BN(r);
+  });
 
   if(matchToPay.team1.transactions.length <= 0 || matchToPay.team2.transactions.length <= 0){
     //one of the two teams has no bets so refund everything with no fees
@@ -284,17 +296,18 @@ exports.payMatch = async (countryCode1, countryCode2, date, timezone, winnerCode
   }
 
   matchToPay.payed = true;
+  matchToPay.winnerCode = winnerCode;
   matchToPay.save();
 }
 
 const refundTransactions = async (team, fee) => {
-  let totalProfit = 0;
+  let totalProfit = new BN(0);
 
   let txCounter = 0;
 
   for(let i = 0; i < team.transactions.length; i++){
-    const transactionProfit = (team.transactions[i].amount * fee / 100);
-    const amount = team.transactions[i].amount - transactionProfit - feeCost;
+    const transactionProfit = new BN(team.transactions[i].amount).times(new BN(fee)).dividedBy(100);
+    const amount = new BN(team.transactions[i].amount).minus(transactionProfit).minus(feeCost);
 
     web3.eth.getTransactionCount(team.address).then(txCount => {
       const txData = {
@@ -303,7 +316,7 @@ const refundTransactions = async (team, fee) => {
         gasLimit,
         to: team.transactions[i].sender,
         from: team.address,
-        value: web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether'))
+        value: web3.utils.toHex(amount.toString())
       }
 
       sendSigned(txData, team.privateKey, function(err, result) {
@@ -314,14 +327,12 @@ const refundTransactions = async (team, fee) => {
       txCounter++;
     });
 
-    totalProfit += transactionProfit;
+    totalProfit = totalProfit.plus(transactionProfit);
   }
 
-  totalProfit -= feeCost;
+  totalProfit = totalProfit.minus(feeCost);
 
-  totalProfit = parseFloat(parseFloat(totalProfit).toFixed(16))
-
-  if(totalProfit > 0){
+  if(totalProfit.isGreaterThan(0)){
 
     web3.eth.getTransactionCount(team.address).then(txCount => {
       const txData = {
@@ -330,7 +341,7 @@ const refundTransactions = async (team, fee) => {
         gasLimit,
         to: process.env.PRODETH_ADDRESS,
         from: team.address,
-        value: web3.utils.toHex(web3.utils.toWei(totalProfit.toString(), 'ether'))
+        value: web3.utils.toHex(totalProfit.toString())
       }
 
       sendSigned(txData, team.privateKey, function(err, result) {
@@ -344,33 +355,41 @@ const refundTransactions = async (team, fee) => {
 const payTransactions = async (teamLoser, teamWinner, fee) => {
   let totalProfit = 0;
 
-  let totalWinningPool = 0;
-  let totalWinnersPool = 0;
+  let totalWinningPool = new BN(0);
+  let totalWinnersPool = new BN(0);
 
   let txCounter = 0;
 
   for(let i = 0; i < teamLoser.transactions.length; i++){
     //the pool that is used to pay everyone
-    totalWinningPool += teamLoser.transactions[i].amount;
+    totalWinningPool = totalWinningPool.plus(teamLoser.transactions[i].amount);
   }
 
   for(let i = 0; i < teamWinner.transactions.length; i++){
     //the pool of everyone that won
-    totalWinnersPool += teamWinner.transactions[i].amount;
+    totalWinnersPool = totalWinnersPool.plus(teamWinner.transactions[i].amount);
   }
+
+  let noFeeBonusGiven = false;
 
   for(let i = 0; i < teamWinner.transactions.length; i++){
     //how much percentage you win from the winning pool
-    const winningPercentage = teamWinner.transactions[i].amount / totalWinnersPool;
+    const winningPercentage = new BN(teamWinner.transactions[i].amount).dividedBy(totalWinnersPool);
 
     //how much amount you win from the winning pool
-    const winningAmount = winningPercentage * totalWinningPool;
+    const winningAmount = winningPercentage.times(totalWinningPool);
 
-    //prodeth profit. If this is the first transaction of the team, there's no fee
-    const transactionProfit = winningAmount * (i == 0 ? 0 : fee) / 100;
+    //If this is the first transaction >= 0.01 eth of the team, there's no fee
+    if(!noFeeBonusGiven && new BN(teamWinner.transactions[i].amount).isGreaterThanOrEqualTo(web3.eth.toWei(0.01, "ether"))){
+      fee = 0;
+      noFeeBonusGiven = true;
+    }
+
+    //prodeth profit
+    const transactionProfit = winningAmount.times(fee).divided(100);
 
     //amount with the fee applied
-    const amountWithFee = winningAmount - transactionProfit - feeCost;
+    const amountWithFee = winningAmount.minus(transactionProfit).minus(feeCost);
 
     web3.eth.getTransactionCount(teamLoser.address).then(txCount => {
       const txData = {
@@ -379,7 +398,7 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
         gasLimit,
         to: teamWinner.transactions[i].sender,
         from: teamLoser.address,
-        value: web3.utils.toHex(web3.utils.toWei(amountWithFee.toString(), 'ether'))
+        value: web3.utils.toHex(amountWithFee.toString())
       }
 
       sendSigned(txData, teamLoser.privateKey, function(err, result) {
@@ -390,14 +409,12 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
       txCounter++;
     });
 
-    totalProfit += transactionProfit;
+    totalProfit = totalProfit.plus(transactionProfit);
   }
 
-  totalProfit -= feeCost;
+  totalProfit = totalProfit.minus(feeCost);
 
-  totalProfit = parseFloat(parseFloat(totalProfit).toFixed(16))
-
-  if(totalProfit > 0){
+  if(totalProfit.isGreaterThan(0)){
     web3.eth.getTransactionCount(teamLoser.address).then(txCount => {
       const txData = {
         nonce: web3.utils.toHex(txCount + txCounter),
@@ -405,7 +422,7 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
         gasLimit,
         to: process.env.PRODETH_ADDRESS,
         from: teamLoser.address,
-        value: web3.utils.toHex(web3.utils.toWei(totalProfit.toString(), 'ether'))
+        value: web3.utils.toHex(totalProfit.toString())
       }
 
       sendSigned(txData, teamLoser.privateKey, function(err, result) {

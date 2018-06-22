@@ -25,7 +25,7 @@ const getTransaction = address => {
           results.map(r => {
             return {
               id: r.hash,
-              amount: web3.utils.fromWei(r.value, 'ether'),
+              amount: r.value,
               sender: r.from,
               time: new Date(r.timeStamp * 1000)
             };
