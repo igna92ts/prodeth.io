@@ -270,6 +270,7 @@ exports.payMatch = async (countryCode1, countryCode2, date, timezone, winnerCode
     });
   }
   if (!matchToPay) throw new Error(`No matches found for country codes ${countryCode1} and ${countryCode2}`);
+  if (new Date().getTime() < new Date(matchToPay.date).getTime()) throw new Error(`The bets for this match are still open`);
 
   const winningFee = 5.00; // 5% fee;
   const tieFee = 1.00; // 1% fee;
@@ -316,7 +317,7 @@ const refundTransactions = async (team, fee) => {
   let txCounter = 0;
 
   for(let i = 0; i < team.transactions.length; i++){
-    const transactionProfit = new BN(team.transactions[i].amount).times(new BN(fee)).dividedBy(100);
+    const transactionProfit = new BN(team.transactions[i].amount).times(new BN(fee)).dividedBy(100).decimalPlaces(0,1);
     const amount = new BN(team.transactions[i].amount).minus(transactionProfit).minus(feeCost);
 
     web3.eth.getTransactionCount(team.address).then(txCount => {
@@ -326,7 +327,7 @@ const refundTransactions = async (team, fee) => {
         gasLimit,
         to: team.transactions[i].sender,
         from: team.address,
-        value: web3.utils.toHex(amount.decimalPlaces(0,1).toString())
+        value: web3.utils.toHex(amount.toString())
       }
 
       sendSigned(txData, team.privateKey, function(err, result) {
@@ -343,32 +344,33 @@ const refundTransactions = async (team, fee) => {
   totalProfit = totalProfit.minus(feeCost);
 
   if(totalProfit.isGreaterThan(0)){
+    console.log(`Prodeth profit: ${totalProfit}`);
+    // web3.eth.getTransactionCount(team.address).then(txCount => {
+    //   const txData = {
+    //     nonce: web3.utils.toHex(txCount + txCounter),
+    //     gasPrice,
+    //     gasLimit,
+    //     to: process.env.PRODETH_ADDRESS,
+    //     from: team.address,
+    //     value: web3.utils.toHex(totalProfit.toString())
+    //   }
 
-    web3.eth.getTransactionCount(team.address).then(txCount => {
-      const txData = {
-        nonce: web3.utils.toHex(txCount + txCounter),
-        gasPrice,
-        gasLimit,
-        to: process.env.PRODETH_ADDRESS,
-        from: team.address,
-        value: web3.utils.toHex(totalProfit.decimalPlaces(0,1).toString())
-      }
-
-      sendSigned(txData, team.privateKey, function(err, result) {
-        if (err) return console.log('error', err);
-        console.log('sent', result);
-      });
-    });
+    //   sendSigned(txData, team.privateKey, function(err, result) {
+    //     if (err) return console.log('error', err);
+    //     console.log('sent', result);
+    //   });
+    // });
   }
 };
 
-const payTransactions = async (teamLoser, teamWinner, fee) => {
-  let totalProfit = 0;
+const payTransactions = async (teamLoser, teamWinner, originalFee) => {
+  let totalProfit = new BN(0);
 
   let totalWinningPool = new BN(0);
   let totalWinnersPool = new BN(0);
 
   let txCounter = 0;
+  let fee = originalFee;
 
   for(let i = 0; i < teamLoser.transactions.length; i++){
     //the pool that is used to pay everyone
@@ -383,11 +385,13 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
   let noFeeBonusGiven = false;
 
   for(let i = 0; i < teamWinner.transactions.length; i++){
+    fee = originalFee;
+
     //how much percentage you win from the winning pool
     const winningPercentage = new BN(teamWinner.transactions[i].amount).dividedBy(totalWinnersPool);
 
     //how much amount you win from the winning pool
-    const winningAmount = winningPercentage.times(totalWinningPool);
+    const winningAmount = winningPercentage.times(totalWinningPool).decimalPlaces(0,1);
 
     //If this is the first transaction >= 0.01 eth of the team, there's no fee
     if(!noFeeBonusGiven && new BN(teamWinner.transactions[i].amount).isGreaterThanOrEqualTo(web3.utils.toWei("0.01", "ether"))){
@@ -396,7 +400,7 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
     }
 
     //prodeth profit
-    const transactionProfit = winningAmount.times(fee).dividedBy(100);
+    const transactionProfit = winningAmount.times(fee).dividedBy(100).decimalPlaces(0,1);
 
     //amount with the fee applied
     const amountWithFee = winningAmount.minus(transactionProfit).minus(feeCost);
@@ -408,7 +412,7 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
         gasLimit,
         to: teamWinner.transactions[i].sender,
         from: teamLoser.address,
-        value: web3.utils.toHex(amountWithFee.decimalPlaces(0,1).toString())
+        value: web3.utils.toHex(amountWithFee.toString())
       }
 
       sendSigned(txData, teamLoser.privateKey, function(err, result) {
@@ -425,6 +429,8 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
   totalProfit = totalProfit.minus(feeCost);
 
   if(totalProfit.isGreaterThan(0)){
+    console.log(`Prodeth profit: ${totalProfit}`);
+    /*
     web3.eth.getTransactionCount(teamLoser.address).then(txCount => {
       const txData = {
         nonce: web3.utils.toHex(txCount + txCounter),
@@ -432,7 +438,7 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
         gasLimit,
         to: process.env.PRODETH_ADDRESS,
         from: teamLoser.address,
-        value: web3.utils.toHex(totalProfit.decimalPlaces(0,1).toString())
+        value: web3.utils.toHex(totalProfit.toString())
       }
 
       sendSigned(txData, teamLoser.privateKey, function(err, result) {
@@ -440,5 +446,6 @@ const payTransactions = async (teamLoser, teamWinner, fee) => {
         console.log('sent', result)
       })
     });
+    */
   }
 }
